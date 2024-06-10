@@ -9,7 +9,10 @@ import java.time.LocalDateTime;
 public class Quiz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "quiz_id", nullable = false)
     private Long quizId;
+
+    
     private String quizTitle;
     private String quizContent;
     private int quizPoint;
