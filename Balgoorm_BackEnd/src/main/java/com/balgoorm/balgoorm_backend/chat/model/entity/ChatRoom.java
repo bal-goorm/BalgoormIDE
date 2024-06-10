@@ -11,10 +11,6 @@ public class ChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatRoomId;
 
-    @ManyToOne
-    @JoinColumn(name = "USER_ID", nullable = false)
-    private User user;
-
     @OneToMany(mappedBy = "chatroom")
     private List<Chat> chats;
 }
