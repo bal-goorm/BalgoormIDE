@@ -1,5 +1,7 @@
 package com.balgoorm.balgoorm_backend.quiz.controller;
 
+import com.balgoorm.balgoorm_backend.quiz.model.dto.request.RequestSaveQuiz;
+import com.balgoorm.balgoorm_backend.quiz.model.dto.response.ResponseQuizDetail;
 import com.balgoorm.balgoorm_backend.quiz.model.dto.response.ResponseQuizList;
 import com.balgoorm.balgoorm_backend.quiz.model.enums.QuizSortType;
 import com.balgoorm.balgoorm_backend.quiz.service.QuizService;
@@ -20,6 +22,13 @@ public class QuizController {
 
     private final QuizService quizService;
 
+    /**
+     * 퀴즈 목록을 가져오는 API
+     * @param sortType 정렬할 타입 ( 입력되지 않으면 기본으로 설정 )
+     * @param page ( 현재 목록의 페이지 수 ->  1부터 시작)
+     * @param levels ( 보고싶은 문제 난이도 선택 / ?levels=1,2,3 <- 이런식으로 요청하면 됩니다 )
+     * @return
+     */
     @GetMapping("/list/{page}")
     public ResponseEntity getQuizList(@RequestParam(defaultValue = "DEFAULT") QuizSortType sortType ,@PathVariable int page, @RequestParam(defaultValue = "") List<Integer> levels){
 
@@ -30,6 +39,25 @@ public class QuizController {
         List<ResponseQuizList> quizList = quizService.getQuizList(sortType, levels, page-1);
 
         return ResponseEntity.ok(quizList);
+    }
+
+    @GetMapping("/detail/{quizId}")
+    public ResponseEntity getQuizDetail(@PathVariable Long quizId, @RequestParam Long userId){
+
+        ResponseQuizDetail quizDetail = quizService.getQuizDetail(quizId, userId);
+
+        return ResponseEntity.ok(quizDetail);
+    }
+
+
+
+
+    @PostMapping("/save")
+    public ResponseEntity saveQuiz(@RequestBody RequestSaveQuiz requestSaveQuiz){
+
+
+
+        return ResponseEntity.ok("ok");
     }
 
 
