@@ -4,9 +4,11 @@ import com.balgoorm.balgoorm_backend.quiz.model.dto.response.ResponseQuizList;
 import com.balgoorm.balgoorm_backend.quiz.model.enums.QuizSortType;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 
 public interface QuizService {
 
-    public Page<ResponseQuizList> getQuizList(QuizSortType sortType, int page);
+    public List<ResponseQuizList> getQuizList(QuizSortType sortType, List<Integer> levels, int page);
 
 }
