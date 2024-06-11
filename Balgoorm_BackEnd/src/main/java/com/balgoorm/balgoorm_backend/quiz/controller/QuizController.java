@@ -16,18 +16,18 @@ public class QuizController {
     private final QuizService quizService;
 
     @GetMapping("/list/{page}")
-    public ResponseEntity getQuizList(@RequestParam QuizSortType sortType ,@PathVariable int page){
+    public ResponseEntity getQuizList(@RequestParam QuizSortType sortType ,@PathVariable int page, @RequestParam(defaultValue = "0") int level){
 
-        Page<ResponseQuizList> quizList = quizService.getQuizList(sortType, page);
+        /**
+         * SpringDataJPA 에서 사용한 페이징 시스템의 시작 페이지는 0 부터 들어오는 변수는 1부터 들어오기 떄문에 -1 해서 서비스 메소드로 전달
+         */
+
+        System.out.println(level);
+        Page<ResponseQuizList> quizList = quizService.getQuizList(sortType, page-1);
 
         return ResponseEntity.ok(quizList);
     }
 
-    @GetMapping("/list/level/{page}")
-    public ResponseEntity getQuizList(@RequestParam QuizSortType sortType, @RequestParam int level, @PathVariable int page){
-
-        return ResponseEntity.ok("ok");
-    }
 
 
 }

@@ -37,9 +37,17 @@ public class QuizServiceImpl implements QuizService{
                 quizList = quizRepository.findAll(PageRequest.of(page, pageSize, Sort.by("quizRegDate").descending()));
                 break;
             case REC_ASC:
+                quizList = quizRepository.findAll(PageRequest.of(page, pageSize, Sort.by("quizRecCnt").ascending()));
+                break;
+            case REC_DESC:
                 quizList = quizRepository.findAll(PageRequest.of(page, pageSize, Sort.by("quizRecCnt").descending()));
-
-
+                break;
+            case CORRECT_RATE_ASC:
+                quizList = quizRepository.findAllOrderByCorrectRateAsc(PageRequest.of(page,pageSize));
+                break;
+            case CORRECT_RATE_DESC:
+                quizList = quizRepository.findAllOrderByCorrectRateDesc(PageRequest.of(page,pageSize));
+                break;
         }
 
         Page<ResponseQuizList> responseQuizListPage = quizList.map(
@@ -49,7 +57,7 @@ public class QuizServiceImpl implements QuizService{
                             .quizTitle(quiz.getQuizTitle())
                             .quiz_level(quiz.getQuizLevel())
                             .quiz_rec_cnt(quiz.getQuizRecCnt())
-                            .correct_rate(quiz.getSubmitCnt() == 0 ? 0 : quiz.getCorrectCnt() / quiz.getSubmitCnt() * 100)
+                            .correct_rate(quiz.getSubmitCnt() == 0 ? 0 : quiz.getCorrectCnt() * 100 / quiz.getSubmitCnt())
                             .build();
                 }
         );
