@@ -55,7 +55,7 @@ public class QuizServiceImpl implements QuizService{
 
         Optional<Quiz> findQuiz = quizRepository.findById(quizId);
         if (!findQuiz.isPresent()) {
-            // TODO : Throw Exception ( can't find quiz )
+            // TODO : throw Exception ( can't find quiz )
         }
 
         // TODO : find User ( user repository 연동 후에 작업 )
