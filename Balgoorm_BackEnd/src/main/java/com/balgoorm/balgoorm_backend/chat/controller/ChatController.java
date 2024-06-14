@@ -1,13 +1,19 @@
 package com.balgoorm.balgoorm_backend.chat.controller;
 
+import com.balgoorm.balgoorm_backend.chat.model.entity.Chat;
 import com.balgoorm.balgoorm_backend.chat.model.request.ChatRequest;
 import com.balgoorm.balgoorm_backend.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -24,7 +30,7 @@ public class ChatController {
         return chatRequest.getSenderName() + "님이 입장하셨습니다.";
     }
 
-    @MessageMapping("chat")
+    @MessageMapping("/chat")
     @SendTo("/sub/chat")
     public String enterChat(ChatRequest chatRequest) {
         chatService.enterChat(chatRequest);
@@ -32,7 +38,11 @@ public class ChatController {
         return chatRequest.getSenderName() + ": " + chatRequest.getChatBody();
     }
 
-
+    @GetMapping("history")
+    public ResponseEntity<List<Chat>> getHistory() {
+        List<Chat> chatHistory = chatService.getHistory();
+        return new ResponseEntity<>(chatHistory, HttpStatus.OK);
+    }
 
 
 /*        @MessageMapping("/join")

@@ -5,9 +5,11 @@ import com.balgoorm.balgoorm_backend.chat.model.request.ChatRequest;
 import com.balgoorm.balgoorm_backend.chat.repository.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,11 @@ public class ChatService {
 
         Chat saved = chatRepository.save(chat);
         log.info("saved: {}", saved.getChatBody());
+    }
+
+    public List<Chat> getHistory() {
+        PageRequest pageRequest = PageRequest.of(0, 100);
+        return chatRepository.findLatelyChat(pageRequest);
     }
 
 }

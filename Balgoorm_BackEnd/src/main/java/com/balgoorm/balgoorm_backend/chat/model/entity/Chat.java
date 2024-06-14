@@ -11,6 +11,7 @@ public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatId;
+    private String chatRoomState;
     private String senderName;
     private String chatBody;
     private LocalDateTime chatTime;
