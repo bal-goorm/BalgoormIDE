@@ -1,6 +1,7 @@
 /**
  * 내 정보 페이지
- * 닉네임 수정, 비밀번호 변경 
+ * 비밀번호 변경 
+ * 로그아웃 버튼 클릭시 로그아웃
  */
 
 import axios from 'axios';
@@ -10,18 +11,31 @@ import { useNavigate } from 'react-router-dom';
 import logo2 from "../img/Logo2.png";
 import logo1 from '../img/Logo1.png';
 import './MyPage.css';
+import { useAuth } from './auth/AuthContext';
+import Delete from './Delete';
 
 function MyPage() {
-  const [userInfo, setUserInfo] = useState({username:'', nickname:'', email:'', password:''});
+  const [userInfo, setUserInfo] = useState({id:'', nickname:'', email:'', password:''});
   const navigate = useNavigate();
+  const {user, logout} = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await axios.post('http://localhost:8080/logout');
+      localStorage.removeItem('token');
+      navigate('/login')
+    } catch (error) {
+      console.error('로그아웃 실패', error); 
+    }
+  }
 
   useEffect(() => {
     // 사용자 정보를 가져옴
     const fetchUserInfo = async () => {
       // try {
-      //   const response = await axios.get('localhost:8080/users');
+      //   const response = await axios.get('http://localhost:8080/users');
       //   setUserInfo({
-      //     username: response.data.username,
+      //     id: response.data.id,
       //     nickname: response.data.nickname,
       //     email: response.data.email,
       //     password: response.data.password
@@ -32,12 +46,12 @@ function MyPage() {
       // }
       
       // 테스트용 유저정보
-      // setUserInfo({
-      //   username: 'lee99',
-      //   nickname: 'lhg99',
-      //   email: 'lee991229@naver.com',
-      //   password: '123123'
-      // })
+      setUserInfo({
+        id: 'lee99',
+        nickname: 'lhg99',
+        email: 'lee991229@naver.com',
+        password: '123123'
+      })
     };
 
     fetchUserInfo();
@@ -56,20 +70,20 @@ function MyPage() {
             <Nav.Link href="quiz">코딩퀴즈</Nav.Link>
             <Nav.Link href="board">게시판</Nav.Link>
             <Nav.Link href="chat">채팅</Nav.Link>
-            <Nav.Link href="logout">로그아웃</Nav.Link>
+            <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
     
     <div className='d-flex'>
-      <div className='d-flex flex-column align-items-center sidebar'>
-        <Nav className='flex-column my-auto'>
+      <div className='flex-column align-items-center sidebar'>
+        <Nav className='mt-4 flex-column my-auto'>
           <h2 className='fw-bold'>마이페이지</h2>
           <hr />
-          <Nav.Link onClick={() => navigate('/mypage')} href="/mypage">내 정보</Nav.Link>
-          <Nav.Link onClick={() => navigate('/edit')} href="/edit">비밀번호 변경</Nav.Link>
-          <Nav.Link onClick={() => navigate('/delete')} href="/delete">회원탈퇴</Nav.Link>
+          <Nav.Link onClick={() => navigate('/mypage')}>내 정보</Nav.Link>
+          <Nav.Link onClick={() => navigate('/edit')}>비밀번호 변경</Nav.Link>
+          <Nav.Link onClick={() => navigate('/delete')}>회원탈퇴</Nav.Link>
         </Nav>
       </div>
       
@@ -87,7 +101,7 @@ function MyPage() {
               <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={3}>아이디</Form.Label>
                 <Col sm={5}>
-                  <Form.Control type="text" value={userInfo.username} readOnly />
+                  <Form.Control type="text" value={userInfo.id} readOnly />
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="mb-3">
@@ -112,6 +126,7 @@ function MyPage() {
           </Col>
         </Row>
       </Container>
+      {user && <Delete userId={user.id}/>}
     </div>
   </div>
   );
