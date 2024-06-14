@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChatRequest {
-    private String name; // 채팅을 보낸 사람
-    private String message; // 메시지
+    private String senderName; // 채팅을 보낸 사람
+    private String chatBody; // 메시지
 }

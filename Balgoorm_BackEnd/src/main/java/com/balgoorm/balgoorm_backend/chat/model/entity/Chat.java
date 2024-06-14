@@ -11,10 +11,11 @@ public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatId;
+    private String senderName;
     private String chatBody;
     private LocalDateTime chatTime;
 
-    @ManyToOne
-    @JoinColumn(name = "CHATROOM_ID", nullable = false)
-    private ChatRoom chatroom;
+//    @ManyToOne
+//    @JoinColumn(name = "CHATROOM_ID", nullable = false)
+//    private ChatRoom chatroom;
 }
