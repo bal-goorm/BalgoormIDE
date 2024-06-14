@@ -13,18 +13,23 @@ export const AuthProvider = ({ children }) => {
     const login = async (userData) => {
         const { id, password } = userData;
         try {
-            const response = await axios.get("http://localhost:8080/login", {
+            const response = await axios.post("http://localhost:8080/login", {
                 id,
                 password
-            })
-        }
-        catch(error) {
-            alert(error.response.userData);
+            });
+            const { token, role } = response.data;
+            localStorage.setItem('token', token);
+            localStorage.setItem('role', role);
+            setUser({ id, role });
+        } catch(error) {
+            alert(error.response ? error.response.data : "로그인 실패");
         }
     }
 
     const logout = () => {
-        setUser(null); // 로그아웃 로직 들어가야됨
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        setUser(null);
     }
 
     const value = { user, login, logout };
