@@ -1,7 +1,6 @@
 /**
  * 로그인 페이지
- * 아이디 찾기, 비밀번호 변경 생성
- * 내 정보, 회원 탈퇴, 회원 정보 수정 필요
+ * 아이디 찾기, 비밀번호 변경 시간되면 만들기
  * 로그인을 해야 마이페이지 접근 가능하게 설정
  * 관리자 계정으로 로그인하면 관리자 페이지 접근 가능하게 설정
  */
@@ -14,27 +13,29 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate} from 'react-router-dom';
 import logo1 from "../img/Logo1.png";
 import logo2 from "../img/Logo2.png";
+import { useAuth } from './auth/AuthContext';
 
 function Login() {
     const { register, handleSubmit, formState: {errors} } = useForm();
     const navigate = useNavigate();
+    const { setAuthToken, setUserRole } = useAuth();
 
     const submitForm = async (data) => {
       console.log(data);
       const { id, password }  = data;
 
       try {
-        const response = await axios.post('localhost:8080/login', {
+        const response = await axios.post('http://localhost:8080/login', {
           id,
           password
         });
-        const user = response.data;
+        const { token, role } = response.data;
 
-        if(user.role === 'admin') {
-          navigate('/admin'); // 관리자면 관리자 페이지로 이동
-        } else {
-          navigate('/home'); // 일반 유저면 퀴즈 페이지 이동
-        }
+        localStorage.setItem('token', token);
+        localStorage.setItem('role', role);
+        setAuthToken(token);
+        setUserRole(role);
+        role === "ADMIN" ? navigate('/admin') : navigate('/mypage');
       }
       catch(error) {
         alert(error.response.data);

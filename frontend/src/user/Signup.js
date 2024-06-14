@@ -1,6 +1,5 @@
 /**
  * 회원가입 소스코드
- * 이메일 추가 -완
  */
 
 import React from "react";
@@ -20,17 +19,17 @@ function Signup() {
     const { id, nickname, email, password } = data;
 
     // api 호출 로직
-    // try {
-    //   const response = await axios.post('localhost:8080/signup', {
-    //               id,
-    //               nickname,
-    //               email,
-    //               password
-    //           });
-    //       }
-    //       catch(error) {
-    //           alert(error.response.data);
-    //       }
+    try {
+      const response = await axios.post('localhost:8080/signup', {
+                  id,
+                  nickname,
+                  email,
+                  password
+              });
+          }
+          catch(error) {
+              alert(error.response.data);
+          }
   }
   
   return (
