@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,6 +26,18 @@ public class UserService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
+    @Transactional(readOnly = true)
+    public List<User> getAllMembers() {
+        return userRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public long getTotalUsers() {
+        return userRepository.count();
+    }
+
+
 
     @Transactional
     public void signup(UserSignupRequest request) {
@@ -43,10 +56,17 @@ public class UserService {
             throw new IllegalArgumentException("닉네임이 중복됩니다.");
         }
 
+        if (request.getEmail().isEmpty()) {
+            throw new IllegalArgumentException("이메일이 비어있습니다.");
+        } else if (userRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("이메일이 중복됩니다.");
+        }
+
         User user = User.builder()
                 .userId(request.getUserId())
                 .userPassword(passwordEncoder.encode(request.getPassword()))
                 .nickname(request.getNickname())
+                .email(request.getEmail())
                 .createDate(LocalDateTime.now())
                 .role(UserRole.USER) // 기본 역할을 USER로 설정
                 .build();
