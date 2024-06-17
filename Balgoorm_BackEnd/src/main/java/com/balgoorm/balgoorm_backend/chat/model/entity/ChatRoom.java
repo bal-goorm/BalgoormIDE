@@ -13,4 +13,5 @@ public class ChatRoom {
 
 //    @OneToMany(mappedBy = "chatroom")
 //    private List<Chat> chats;
+
 }
