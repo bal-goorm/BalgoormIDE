@@ -6,7 +6,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Stomp } from '@stomp/stompjs';
 import axios from 'axios';
-import { Container, Nav, Navbar } from 'react-bootstrap';
+import { Button, Container, Form, ListGroup, Nav, Navbar } from 'react-bootstrap';
 import logo2 from '../img/Logo2.png';
 import { useNavigate } from 'react-router-dom';
 
@@ -44,7 +44,7 @@ function Chat() {
   const fetchMessage = async () => {
     return await axios.get('http://localhost:8080/chat/1')
     .then(response => {
-      setMessage(response.data)
+      setMessage(response.data);
     });
   }
 
@@ -66,8 +66,19 @@ function Chat() {
     }
   }
 
+  const handleMessageChange = (e) => {
+    setInputValue(e.target.value);
+  }
+
+  const handleKeyPress = (e) => {
+    if(e.key === 'Enter') {
+      sendMessage();
+    }
+  }
+
   return (
-    <Navbar bg="light" expand="lg">
+    <div>
+      <Navbar bg="light" expand="lg">
         <Container fluid>
           <Navbar.Brand href="/">
             <img src={logo2} alt="BalGoorm Logo" style={{width: '240px'}} />
@@ -79,13 +90,34 @@ function Chat() {
               <Nav.Link href="board">게시판</Nav.Link>
               <Nav.Link href="chat">채팅</Nav.Link>
               <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>
-            </Nav>
+             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
 
-      
+      <Container style={{ marginTop: '20px' }}>
+        <ListGroup>
+          {message.map((msg, index) => (
+            <ListGroup.Item key={index}>
+              <strong>{msg.nickname}:</strong> {msg.message}
+              </ListGroup.Item>
+          ))}
+        </ListGroup>
+        <Form>
+          <Form.Group className="mb-3" controlId="chatMessageInput">
+            <Form.Control 
+            type="text" 
+            placeholder="메시지 입력" 
+            value={inputValue} 
+            onChange={handleMessageChange} 
+            onKeyPress={handleKeyPress} 
+            />
+          </Form.Group>
+          <Button variant="primary" onClick={sendMessage}>전송</Button>
+        </Form>
+      </Container> 
+    </div>
   )
 }
 
-export default Chat
+export default Chat;
