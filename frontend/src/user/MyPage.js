@@ -13,6 +13,7 @@ import logo1 from '../img/Logo1.png';
 import './MyPage.css';
 import { useAuth } from './auth/AuthContext';
 import Delete from './Delete';
+import NavBar from './components/Navbar';
 
 function MyPage() {
   const [userInfo, setUserInfo] = useState({id:'', nickname:'', email:'', password:''});
@@ -59,39 +60,14 @@ function MyPage() {
   
   return (
   <div>
-    <Navbar bg="light" expand="lg">
-      <Container fluid>
-        <Navbar.Brand href="/">
-          <img src={logo2} alt="BalGoorm Logo" style={{width: '240px'}} />
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ms-auto">
-            <Nav.Link href="quiz">코딩퀴즈</Nav.Link>
-            <Nav.Link href="board">게시판</Nav.Link>
-            <Nav.Link href="chat">채팅</Nav.Link>
-            <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
-    
+    <NavBar showExtraLinks={true}/>
+
     <div className='d-flex'>
-      <div className='flex-column align-items-center sidebar'>
-        <Nav className='mt-4 flex-column my-auto'>
-          <h2 className='fw-bold'>마이페이지</h2>
-          <hr />
-          <Nav.Link onClick={() => navigate('/mypage')}>내 정보</Nav.Link>
-          <Nav.Link onClick={() => navigate('/edit')}>비밀번호 변경</Nav.Link>
-          <Nav.Link onClick={() => navigate('/delete')}>회원탈퇴</Nav.Link>
-        </Nav>
-      </div>
-      
-      <Container className='flex-grow-1'>
+      <Container className='d-flex flex-column'>
         <div className="text-center mb-4 mt-4">
           <img src={logo1} alt="BalGoorm Logo" style={{ width: '300px' }} />
           <h1 className="mt-2" style={{ color: '#3498db' }}>BalGoorm</h1>
-        </div>
+          </div>
 
         <Row className='justify-content-center'>
           <Col md={6} className='main-content'>
@@ -127,7 +103,7 @@ function MyPage() {
         </Row>
       </Container>
       {user && <Delete userId={user.id}/>}
-    </div>
+      </div>
   </div>
   );
 }

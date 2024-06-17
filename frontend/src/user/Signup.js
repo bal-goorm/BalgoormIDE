@@ -9,6 +9,7 @@ import { Button, Container, Form, Nav, Navbar } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo1 from "../img/Logo1.png";
 import logo2 from "../img/Logo2.png";
+import NavBar from './components/Navbar.js';
 
 function Signup() {
 
@@ -34,23 +35,7 @@ function Signup() {
   
   return (
   <div>
-    <Navbar bg="light" expand="lg">
-      <Container fluid>
-        <Navbar.Brand href="/">
-          <img src={logo2} alt="BalGoorm Logo" style={{ width: '240px' }} />
-        </Navbar.Brand>
-        
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ms-auto justify-content-between">
-            <Nav.Link href="quiz">코딩퀴즈</Nav.Link>
-            <Nav.Link href="board">게시판</Nav.Link>
-            <Nav.Link href="chat">채팅</Nav.Link>
-            <Nav.Link href="login">로그인</Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+    <NavBar />
     
     <Container className="d-flex flex-column align-items-center justify-content-center min-vh-100">
       <div className="text-center mb-4">
