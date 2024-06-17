@@ -1,0 +1,21 @@
+.sidebar {
+    background-color: #f8f9fa; 
+    padding: 20px;
+    width: 250px;
+    min-height: 100vh;
+    border: 1px solid black;
+    border-radius: 20px;
+}
+
+.main-content {
+    padding: 20px; /* 내부 패딩 */
+    background-color: #fff; /* 흰색 배경 */
+}
+
+.btn-primary {
+    margin-top: 20px; /* 버튼 상단 여백 */
+}
+
+.Row {
+    display: flex;
+}
