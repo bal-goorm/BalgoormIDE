@@ -1,27 +1,35 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import LoginPage from './LoginPage';
-import { BrowserRouter } from 'react-router-dom';
+import React from 'react';
+import { server } from './mocks/server';
+import { rest } from 'msw'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import Login from './user/Login';
+import '@testing-library/jest-dom/extend-expect'
 
-describe('LoginPage', () => {
-  test('allows the user to log in successfully', () => {
-    render(
-      <BrowserRouter>
-        <LoginPage />
-      </BrowserRouter>
-    );
+// 테스트 설정 구성
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
-    // 사용자 이름과 비밀번호 입력 필드 찾기
-    const usernameInput = screen.getByLabelText(/username/i);
-    const passwordInput = screen.getByLabelText(/password/i);
+test('successful login', async () => {
+  render(<Login />)
 
-    // 입력 필드에 값 입력
-    fireEvent.change(usernameInput, { target: { value: 'user1' } });
-    fireEvent.change(passwordInput, { target: { value: 'password123' } });
+  fireEvent.change(screen.getByLabelText(/아이디/i), {target: {value: 'test'}});
+  fireEvent.change(screen.getByLabelText(/비밀번호/i), {target: {value: '1234'}});
 
-    // 로그인 버튼을 찾아 클릭 이벤트 발생
-    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+  fireEvent.click(screen.getByText(/로그인/i));
 
-    // 로그인 함수 호출 검증 (이 부분은 추가적인 목(mock) 설정이 필요할 수 있음)
-    // 예: expect(mockedLoginFunction).toHaveBeenCalledWith('user1', 'password123');
-  });
+  const successMessage = await screen.findByText(/login success/i);
+  expect(successMessage).toBeInTheDocument();
+ });
+
+ test('failed login', async () => {
+  render(<Login />);
+  
+  fireEvent.change(screen.getByLabelText(/아이디/i), { target: { value: 'wrong' } });
+  fireEvent.change(screen.getByLabelText(/비밀번호/i), { target: { value: 'wrong' } });
+  
+  fireEvent.click(screen.getByText(/로그인/i));
+  
+  const errorMessage = await screen.findByText(/login failed/i);
+  expect(errorMessage).toBeInTheDocument();
 });
