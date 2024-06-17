@@ -13,10 +13,15 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
+
     private String userPassword;
+
     private String nickname;
+
     private LocalDateTime createDate;
+
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserRole role;
 
     @ManyToOne
