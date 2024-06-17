@@ -73,25 +73,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    @Transactional(readOnly = true)
-    public User login(UserLoginRequest request) {
-        if (request.getUserId().isEmpty()) {
-            throw new IllegalArgumentException("아이디가 비어있습니다.");
-        }
-        if (request.getPassword().isEmpty()) {
-            throw new IllegalArgumentException("비밀번호가 비어있습니다.");
-        }
-
-        String userId = request.getUserId();
-        Optional<User> getUser = userRepository.findByUserId(userId);
-        if (getUser.isPresent()) {
-            User user = getUser.get();
-            if (passwordEncoder.matches(request.getPassword(), user.getUserPassword())) {
-                return user;
-            }
-        }
-        return null;
-    }
 
     @Transactional
     public void updateUser(UserUpdateRequest request, String userId) {
@@ -116,6 +97,16 @@ public class UserService {
         } else {
             throw new IllegalArgumentException("유저를 찾을 수 없습니다.");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public boolean checkPassword(String userId, String rawPassword) {
+        Optional<User> optionalUser = userRepository.findByUserId(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            return passwordEncoder.matches(rawPassword, user.getUserPassword());
+        }
+        return false;
     }
 
     @Transactional
