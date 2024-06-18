@@ -33,8 +33,8 @@ function App() {
                 <Route path="/delete" element={<Delete />} />
                 {/* 기존 경로들 추가 */}
                 {/* <Route path="/main" element={<MainPage />} /> */}
-                {/* <Route path="/editor" element={<EditorPage />} />
-                <Route path="/editortest" element={<TestEditorPage />} /> */}
+                <Route path="/editor" element={<EditorPage />} />
+                <Route path="/editortest" element={<TestEditorPage />} />
                 {/* 주석 처리된 경로 추가 가능 */}
                 {/* <Route path="/edit" element={<ProtectedRoute><EditPage /></ProtectedRoute>} /> */}
                 {/* <Route path="/chat" element={<Chat />} /> */}
