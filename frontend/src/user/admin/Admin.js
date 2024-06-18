@@ -5,13 +5,12 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Button, Container, Nav, Navbar, Table } from 'react-bootstrap';
-import logo2 from "../../img/Logo2.png";
-import { useNavigate } from 'react-router-dom';
+import { Button, Table } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import UserEditModal from './UserEditModal.js';
 import './Admin.css';
+import Modal from '../../components/Modal.js';
 
 function Admin() {
   const initialUsers = [
@@ -24,7 +23,6 @@ function Admin() {
   const [showModal, setShowModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [userCount, setUserCount] = useState(0);
-  const navigate = useNavigate();
 
   useEffect(() => {
     // 유저 데이터 가져옴
@@ -77,34 +75,7 @@ function Admin() {
   
   return (
     <div>
-      <Navbar bg="light" expand="lg">
-        <Container fluid>
-          <Navbar.Brand href="/">
-            <img src={logo2} alt="BalGoorm Logo" style={{width: '240px'}} />
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ms-auto">
-              <Nav.Link href="quiz">코딩퀴즈</Nav.Link>
-              <Nav.Link href="board">게시판</Nav.Link>
-              <Nav.Link href="chat">채팅</Nav.Link>
-              <Nav.Link href="login">로그인</Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-      
       <div className='d-flex'>
-        <div className='d-flex flex-column align-items-center sidebar'>
-          <Nav className='flex-column my-auto'>
-            <h2 className='fw-bold'>관리자 페이지</h2>
-            <hr />
-            <Nav.Link onClick={() => navigate('/admin')}>유저 관리</Nav.Link>
-            <Nav.Link onClick={() => navigate('/boardinfo')}>게시판 정보</Nav.Link>
-            <Nav.Link onClick={() => navigate('/chatinfo')}>채팅 관리</Nav.Link>
-          </Nav>
-        </div>
-
         <div className='ms-5'>
           <h2 className='mt-5 fw-bold'>유저 관리</h2>
           <p>총 회원수: {userCount} 명</p>

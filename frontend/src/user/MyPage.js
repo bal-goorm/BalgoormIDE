@@ -8,7 +8,6 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Col, Container, Form, Nav, Navbar, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import logo2 from "../img/Logo2.png";
 import logo1 from '../img/Logo1.png';
 import './MyPage.css';
 import { useAuth } from './auth/AuthContext';
@@ -59,34 +58,9 @@ function MyPage() {
   
   return (
   <div>
-    <Navbar bg="light" expand="lg">
-      <Container fluid>
-        <Navbar.Brand href="/">
-          <img src={logo2} alt="BalGoorm Logo" style={{width: '240px'}} />
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ms-auto">
-            <Nav.Link href="quiz">코딩퀴즈</Nav.Link>
-            <Nav.Link href="board">게시판</Nav.Link>
-            <Nav.Link href="chat">채팅</Nav.Link>
-            <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
     
     <div className='d-flex'>
-      <div className='flex-column align-items-center sidebar'>
-        <Nav className='mt-4 flex-column my-auto'>
-          <h2 className='fw-bold'>마이페이지</h2>
-          <hr />
-          <Nav.Link onClick={() => navigate('/mypage')}>내 정보</Nav.Link>
-          <Nav.Link onClick={() => navigate('/edit')}>비밀번호 변경</Nav.Link>
-          <Nav.Link onClick={() => navigate('/delete')}>회원탈퇴</Nav.Link>
-        </Nav>
-      </div>
-      
+    
       <Container className='flex-grow-1'>
         <div className="text-center mb-4 mt-4">
           <img src={logo1} alt="BalGoorm Logo" style={{ width: '300px' }} />

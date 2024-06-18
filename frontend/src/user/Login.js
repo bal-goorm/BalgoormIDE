@@ -12,7 +12,6 @@ import { Button, Container, Form, Nav, Navbar } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate} from 'react-router-dom';
 import logo1 from "../img/Logo1.png";
-import logo2 from "../img/Logo2.png";
 import { useAuth } from './auth/AuthContext';
 
 function Login() {
@@ -43,24 +42,7 @@ function Login() {
     }
     
     return (
-    <div>
-      <Navbar bg="light" expand="lg">
-        <Container fluid>
-          <Navbar.Brand href="/">
-            <img src={logo2} alt="BalGoorm Logo" style={{width: '240px'}} />
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ms-auto">
-              <Nav.Link href="quiz">코딩퀴즈</Nav.Link>
-              <Nav.Link href="board">게시판</Nav.Link>
-              <Nav.Link href="chat">채팅</Nav.Link>
-              <Nav.Link href="login">로그인</Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-      
+    <div>      
       <Container className="d-flex flex-column align-items-center justify-content-center min-vh-100">
         <div className="text-center mb-4">
           <img src={logo1} alt="BalGoorm Logo" style={{ width: '300px' }} />
@@ -68,21 +50,30 @@ function Login() {
         </div>
         
         <Form onSubmit={handleSubmit(submitForm)} className="w-100" style={{ maxWidth: '300px' }}>
-          <Form.Group controlId="id">
-            <Form.Label>아이디</Form.Label>
-            <Form.Control type="text" placeholder="id 입력" 
+          <Form.Group controlId="formId">
+            <Form.Label htmlFor='id'>아이디</Form.Label>
+            <Form.Control 
+            id="id" 
+            type="text" 
+            placeholder="id 입력" 
+            aria-label='아이디'
             {...register("id", {required: "아이디를 입력해주세요"})} />
           </Form.Group>
           {errors.id && <div style={{color: "red", marginTop: "10px"}}>{errors.id.message}</div>}
           <br />
           
-          <Form.Group controlId="password">
-            <Form.Label>비밀번호</Form.Label>
-            <Form.Control type="password" placeholder="비밀번호 입력" {...register("password", {required: "비밀번호를 입력하세요"})}/>
+          <Form.Group controlId="formPassword">
+            <Form.Label htmlFor='password'>비밀번호</Form.Label>
+            <Form.Control 
+            id='password' 
+            type="password" 
+            placeholder="비밀번호 입력" 
+            aria-label='비밀번호' 
+            {...register("password", {required: "비밀번호를 입력하세요"})}/>
           </Form.Group>
           {errors.password && <div style={{color: "red", marginTop: "10px"}}>{errors.password.message}</div>}
 
-          <Button variant="primary" type="submit" className="w-100 mt-4">
+          <Button variant="primary" type="submit" className="w-100 mt-4" aria-label='로그인 버튼'>
             로그인
           </Button>
         </Form>

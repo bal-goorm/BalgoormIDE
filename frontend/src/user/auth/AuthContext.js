@@ -10,6 +10,14 @@ export function useAuth() {
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
+    const setAuthToken = (token) => {
+        localStorage.setItem('token', token);
+    }
+
+    const setUserRole = (role) => {
+        localStorage.setItem('role', role);
+    }
+
     const login = async (userData) => {
         const { id, password } = userData;
         try {
@@ -18,8 +26,8 @@ export const AuthProvider = ({ children }) => {
                 password
             });
             const { token, role } = response.data;
-            localStorage.setItem('token', token);
-            localStorage.setItem('role', role);
+            setAuthToken(token);
+            setUserRole(role);
             setUser({ id, role });
         } catch(error) {
             alert(error.response ? error.response.data : "로그인 실패");
@@ -32,7 +40,7 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
     }
 
-    const value = { user, login, logout };
+    const value = { user, login, logout, setAuthToken, setUserRole };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
