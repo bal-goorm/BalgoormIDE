@@ -9,6 +9,7 @@ import com.balgoorm.balgoorm_backend.user.auth.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -22,7 +23,9 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/{id}")
-    public BoardResponseDTO searchBoard(@PathVariable("id") Long boardId) {
+    public BoardResponseDTO searchBoard(@PathVariable("id") Long boardId, Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        boardService.viewBoard(boardId, userDetails.getUserId());
         return boardService.searchBoard(boardId);
     }
 
@@ -39,8 +42,7 @@ public class BoardController {
                                         @ModelAttribute BoardImageUploadDTO boardImageUploadDTO,
                                         Authentication authentication) throws IOException {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long userId = userDetails.getUserId();
-        Long boardId = boardService.saveBoard(boardWriteRequestDTO, boardImageUploadDTO, userId);
+        Long boardId = boardService.saveBoard(boardWriteRequestDTO, boardImageUploadDTO, userDetails.getUsername());
         return boardService.searchBoard(boardId);
     }
 
@@ -49,15 +51,13 @@ public class BoardController {
                                       @ModelAttribute BoardEditRequest boardEditRequest,
                                       Authentication authentication) throws IOException {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long userId = userDetails.getUserId();
-        return boardService.editBoard(boardId, boardEditRequest, userId);
+        return boardService.editBoard(boardId, boardEditRequest, userDetails.getUsername());
     }
 
     @DeleteMapping("/{id}")
     public void deleteBoard(@PathVariable("id") Long boardId, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long userId = userDetails.getUserId();
-        boardService.deleteBoard(boardId, userId);
+        boardService.deleteBoard(boardId, userDetails.getUsername());
     }
 
     @PostMapping("/{id}/like")

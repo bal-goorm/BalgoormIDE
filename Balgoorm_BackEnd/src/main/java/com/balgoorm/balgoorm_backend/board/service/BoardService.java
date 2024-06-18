@@ -7,9 +7,11 @@ import com.balgoorm.balgoorm_backend.board.model.dto.response.BoardResponseDTO;
 import com.balgoorm.balgoorm_backend.board.model.entity.Board;
 import com.balgoorm.balgoorm_backend.board.model.entity.BoardImage;
 import com.balgoorm.balgoorm_backend.board.model.entity.Likes;
+import com.balgoorm.balgoorm_backend.board.model.entity.View;
 import com.balgoorm.balgoorm_backend.board.repository.BoardRepository;
 import com.balgoorm.balgoorm_backend.board.repository.BoardImageRepository;
 import com.balgoorm.balgoorm_backend.board.repository.LikesRepository;
+import com.balgoorm.balgoorm_backend.board.repository.ViewRepository;
 import com.balgoorm.balgoorm_backend.user.model.entity.User;
 import com.balgoorm.balgoorm_backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +41,7 @@ public class BoardService {
     private final BoardImageRepository boardImageRepository;
     private final UserRepository userRepository;
     private final LikesRepository likesRepository;
+    private final ViewRepository viewRepository;
 
     @Value("${file.boardImagePath}")
     private String uploadFolder;
@@ -63,8 +66,8 @@ public class BoardService {
     }
 
     @Transactional
-    public Long saveBoard(BoardWriteRequestDTO boardWriteRequestDTO, BoardImageUploadDTO boardImageUploadDTO, Long userId) {
-        User user = userRepository.findById(userId)
+    public Long saveBoard(BoardWriteRequestDTO boardWriteRequestDTO, BoardImageUploadDTO boardImageUploadDTO, String userId) {
+        User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자 ID에 해당하는 회원이 없습니다."));
 
         Board board = Board.builder()
@@ -113,24 +116,22 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResponseDTO editBoard(Long boardId, BoardEditRequest boardEditRequest, Long userId) throws IOException {
+    public BoardResponseDTO editBoard(Long boardId, BoardEditRequest boardEditRequest, String userId) throws IOException {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
-        if (!board.getUser().getId().equals(userId)) {
+        if (!board.getUser().getUserId().equals(userId)) {
             throw new IllegalArgumentException("다른 사용자의 게시글은 수정할 수 없습니다.");
         }
         board.setBoardTitle(boardEditRequest.getBoardTitle());
         board.setBoardContent(boardEditRequest.getBoardContent());
-
-        // 필요한 경우 파일 처리 로직 추가
 
         boardRepository.save(board);
         return new BoardResponseDTO(board);
     }
 
     @Transactional
-    public void deleteBoard(Long boardId, Long userId) {
+    public void deleteBoard(Long boardId, String userId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
-        if (!board.getUser().getId().equals(userId)) {
+        if (!board.getUser().getUserId().equals(userId)) {
             throw new IllegalArgumentException("다른 사용자의 게시글은 삭제할 수 없습니다.");
         }
         boardRepository.deleteById(boardId);
@@ -144,7 +145,7 @@ public class BoardService {
         if (!likesRepository.existsByUserIdAndBoardBoardId(userId, boardId)) {
             Likes like = new Likes(user, board);
             likesRepository.save(like);
-            board.incrementLikes(); // 좋아요 수 증가
+            board.incrementLikes();
             boardRepository.save(board);
         } else {
             throw new IllegalArgumentException("User already liked this board");
@@ -157,7 +158,20 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalArgumentException("Like not found for user and board"));
         likesRepository.delete(like);
         Board board = like.getBoard();
-        board.decrementLikes(); // 좋아요 수 감소
+        board.decrementLikes();
         boardRepository.save(board);
+    }
+
+    @Transactional
+    public void viewBoard(Long boardId, Long userId) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("Board not found with id: " + boardId));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
+
+        if (!viewRepository.existsByUserIdAndBoardBoardId(userId, boardId)) {
+            View view = new View(user, board);
+            viewRepository.save(view);
+            board.incrementViews();
+            boardRepository.save(board);
+        }
     }
 }

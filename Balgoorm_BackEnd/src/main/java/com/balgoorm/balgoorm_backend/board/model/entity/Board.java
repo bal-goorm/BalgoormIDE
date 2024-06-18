@@ -20,7 +20,8 @@ public class Board {
     private String boardTitle;
     private String boardContent;
     private LocalDateTime boardCreateDate;
-    private int likesCount; // 좋아요 수 필드 추가
+    private int likesCount;
+    private int viewCount;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID", nullable = false)
@@ -32,20 +33,19 @@ public class Board {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @OrderBy("commentCreateDate asc")
-    private List<Comment> comments = new ArrayList<>(); // 빈 리스트로 초기화
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<View> views = new ArrayList<>();
 
     @Builder
     public Board(String boardTitle, String boardContent, LocalDateTime boardCreateDate, User user) {
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
-        this.boardCreateDate = boardCreateDate;
+        this.boardCreateDate = boardCreateDate != null ? boardCreateDate : LocalDateTime.now();
         this.user = user;
-        this.likesCount = 0; // 기본값으로 좋아요 수를 0으로 설정
-    }
-
-    public void update(String boardTitle, String boardContent) {
-        this.boardTitle = boardTitle;
-        this.boardContent = boardContent;
+        this.likesCount = 0;
+        this.viewCount = 0;
     }
 
     public void incrementLikes() {
@@ -54,5 +54,9 @@ public class Board {
 
     public void decrementLikes() {
         this.likesCount--;
+    }
+
+    public void incrementViews() {
+        this.viewCount++;
     }
 }
