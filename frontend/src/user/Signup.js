@@ -8,8 +8,6 @@ import { useForm } from "react-hook-form";
 import { Button, Container, Form, Nav, Navbar } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo1 from "../img/Logo1.png";
-import logo2 from "../img/Logo2.png";
-import NavBar from './components/Navbar.js';
 
 function Signup() {
 
@@ -35,7 +33,6 @@ function Signup() {
   
   return (
   <div>
-    <NavBar />
     
     <Container className="d-flex flex-column align-items-center justify-content-center min-vh-100">
       <div className="text-center mb-4">

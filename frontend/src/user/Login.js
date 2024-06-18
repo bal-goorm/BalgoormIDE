@@ -6,61 +6,43 @@
  */
 
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Button, Container, Form, Nav, Navbar } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import logo1 from "../img/Logo1.png";
-import logo2 from "../img/Logo2.png";
 import { useAuth } from './auth/AuthContext';
-import NavBar from './components/Navbar.js';
 
 function Login() {
     const { register, handleSubmit, formState: {errors} } = useForm();
     const navigate = useNavigate();
     const { setAuthToken, setUserRole } = useAuth();
-    const [message, setMessage] = useState("");
-
-    useEffect(() => {
-      console.log('message state updated: ', message);
-    }, [message]);
-    
 
     const submitForm = async (data) => {
-      // console.log(data);
-      const { id, password } = data;
+      console.log(data);
+      const { id, password }  = data;
 
       try {
         const response = await axios.post('http://localhost:8080/login', {
           id,
           password
         });
-        console.log("response: ", response.data);
         const { token, role } = response.data;
 
+        localStorage.setItem('token', token);
+        localStorage.setItem('role', role);
         setAuthToken(token);
         setUserRole(role);
-        setMessage('login success');
-        console.log('message set to : login success');
-        setTimeout(() => {
-          role === "ADMIN" ? navigate('/admin') : navigate('/mypage');
-        }, 0);
-        
-      } catch(error) {
-        const errMsg = error.response ? error.response.data.message : "login failed";
-        setMessage(errMsg);
-        console.log('Message set to:', errMsg);
-        if(typeof window !== 'undefined') {
-          alert(errMsg);
-        }
+        role === "ADMIN" ? navigate('/admin') : navigate('/mypage');
+      }
+      catch(error) {
+        alert(error.response.data);
       }  
     }
     
     return (
-    <div>
-      <NavBar />
-      
+    <div>      
       <Container className="d-flex flex-column align-items-center justify-content-center min-vh-100">
         <div className="text-center mb-4">
           <img src={logo1} alt="BalGoorm Logo" style={{ width: '300px' }} />
@@ -71,7 +53,7 @@ function Login() {
           <Form.Group controlId="formId">
             <Form.Label htmlFor='id'>아이디</Form.Label>
             <Form.Control 
-            id='id' 
+            id="id" 
             type="text" 
             placeholder="id 입력" 
             aria-label='아이디'
@@ -86,7 +68,7 @@ function Login() {
             id='password' 
             type="password" 
             placeholder="비밀번호 입력" 
-            aria-label='비밀번호'
+            aria-label='비밀번호' 
             {...register("password", {required: "비밀번호를 입력하세요"})}/>
           </Form.Group>
           {errors.password && <div style={{color: "red", marginTop: "10px"}}>{errors.password.message}</div>}
@@ -94,7 +76,6 @@ function Login() {
           <Button variant="primary" type="submit" className="w-100 mt-4" aria-label='로그인 버튼'>
             로그인
           </Button>
-          {message && <div>{message}</div>}
         </Form>
         
         <div className="mt-3">

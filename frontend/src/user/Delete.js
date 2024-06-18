@@ -3,15 +3,13 @@
  * 제대로 동작하는지 확인해야됨
  */
 
-import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Form, Nav, Navbar, Row } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logo2 from "../img/Logo2.png";
 import logo1 from '../img/Logo1.png';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from './auth/AuthContext';
-import NavBar from './components/Navbar.js';
 
 
 function Delete({userId}) {
@@ -20,24 +18,14 @@ function Delete({userId}) {
   const { user, logout} = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    try {
-      await axios.post('http://localhost:8080/logout');
-      localStorage.removeItem('token');
-      navigate('/login')
-    } catch (error) {
-      console.error('로그아웃 실패', error); 
-    }
-  }
-
   const handleDelete = async () => {
-    if(pwd) {
+    if(!pwd) {
       try {
         await axios.delete(`http://localhost:8080/deleteUser/${user.id}`, {data: {pwd}});
         localStorage.removeItem('token');
         localStorage.removeItem('role');
         alert("계정이 삭제되었습니다. 그동안 저희 서비스를 이용해주셔서 감사합니다.");
-        handleLogout();
+        navigate('/login')
       } catch (error) {
         alert('계정 삭제 실패', error);
       }
@@ -45,15 +33,13 @@ function Delete({userId}) {
   }
 
   return (
-    <div>
-      <NavBar showExtraLinks={true}/>
-
+    <div> 
       <Container className='flex-grow-1'>
         <div className="text-center mb-4 mt-4">
           <img src={logo1} alt="BalGoorm Logo" style={{ width: '300px' }} />
           <h1 className="mt-2" style={{ color: '#3498db' }}>BalGoorm</h1>
         </div>
-
+        
         <div className='border border-2 border-secondary rounded'>
           <Row className='justify-content-center'>
             <Col md={6} className='main-content'>
@@ -65,18 +51,18 @@ function Delete({userId}) {
               <Form>
                 <Form.Group as={Row} className="d-flex mb-3">
                   <Form.Label className='fw-bolder' column sm={3}>비밀번호</Form.Label>
-                  <Col sm={5}>
-                    <Form.Control 
-                    type="password" 
-                    value={pwd}
-                    onChange={(e) => setPwd(e.target.value)}
-                    placeholder='비밀번호를 입력하세요.' />
-                  </Col>
-                </Form.Group>
+                    <Col sm={5}>
+                      <Form.Control 
+                      type="password" 
+                      value={pwd}
+                      onChange={(e) => setPwd(e.target.value)}
+                      placeholder='비밀번호를 입력하세요.' />
+                    </Col>
+                  </Form.Group>
 
-                <Button variant="primary" onClick={handleDelete} className="w-100 mt-4">
-                  회원 탈퇴
-                </Button>
+                  <Button variant="primary" onClick={handleDelete} className="w-100 mt-4">
+                    회원 탈퇴
+                  </Button>
               </Form>
             </Col>
           </Row>

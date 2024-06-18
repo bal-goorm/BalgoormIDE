@@ -8,12 +8,10 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Col, Container, Form, Nav, Navbar, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import logo2 from "../img/Logo2.png";
 import logo1 from '../img/Logo1.png';
 import './MyPage.css';
 import { useAuth } from './auth/AuthContext';
 import Delete from './Delete';
-import NavBar from './components/Navbar';
 
 function MyPage() {
   const [userInfo, setUserInfo] = useState({id:'', nickname:'', email:'', password:''});
@@ -60,14 +58,14 @@ function MyPage() {
   
   return (
   <div>
-    <NavBar showExtraLinks={true}/>
-
+    
     <div className='d-flex'>
-      <Container className='d-flex flex-column'>
+    
+      <Container className='flex-grow-1'>
         <div className="text-center mb-4 mt-4">
           <img src={logo1} alt="BalGoorm Logo" style={{ width: '300px' }} />
           <h1 className="mt-2" style={{ color: '#3498db' }}>BalGoorm</h1>
-          </div>
+        </div>
 
         <Row className='justify-content-center'>
           <Col md={6} className='main-content'>
@@ -103,7 +101,7 @@ function MyPage() {
         </Row>
       </Container>
       {user && <Delete userId={user.id}/>}
-      </div>
+    </div>
   </div>
   );
 }

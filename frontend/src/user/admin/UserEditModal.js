@@ -31,7 +31,7 @@ function UserEditModal({ isOpen, onRequestClose, user, onSave}) {
 
     return (
         <Modal show={isOpen} onHide={onRequestClose}>
-            <Modal.Header closeButton>
+            <Modal.Header>
                 <Modal.Title>유저 편집</Modal.Title>
             </Modal.Header>
             <Form onSubmit={handleSubmit}>

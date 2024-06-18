@@ -5,15 +5,12 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Button, Container, Nav, Navbar, Table } from 'react-bootstrap';
-import logo2 from "../../img/Logo2.png";
-import { useNavigate } from 'react-router-dom';
+import { Button, Table } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import UserEditModal from './UserEditModal.js';
 import './Admin.css';
-import Sidebar from '../components/Sidebar.js';
-import NavBar from '../components/Navbar.js';
+import Modal from '../../components/Modal.js';
 
 function Admin() {
   const initialUsers = [
@@ -26,7 +23,6 @@ function Admin() {
   const [showModal, setShowModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [userCount, setUserCount] = useState(0);
-  const navigate = useNavigate();
 
   useEffect(() => {
     // 유저 데이터 가져옴
@@ -79,9 +75,7 @@ function Admin() {
   
   return (
     <div>
-      <NavBar />
       <div className='d-flex'>
-        <Sidebar />
         <div className='ms-5'>
           <h2 className='mt-5 fw-bold'>유저 관리</h2>
           <p>총 회원수: {userCount} 명</p>
