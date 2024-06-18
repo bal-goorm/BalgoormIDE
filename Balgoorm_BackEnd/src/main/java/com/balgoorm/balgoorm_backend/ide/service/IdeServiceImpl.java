@@ -253,7 +253,6 @@ public class IdeServiceImpl implements IdeService {
         boolean isCorrect = compareOutput(quizAnswer, stdout);
         codeRunResponse.setCorrect(isCorrect);
 
-        quizInfoUpdate(executeRequest.getQuizId(), isCorrect);
         saveSubmitRecord(executeRequest, isCorrect, runTime, memoryUsage);
 
         // 만약 정답이라면 해결 문제에 추가
@@ -266,6 +265,8 @@ public class IdeServiceImpl implements IdeService {
                         .solvedAt(LocalDateTime.now())
                         .build();
                 solvedQuizRepository.save(solvedQuiz);
+                // 한번 정답을 맞춘 사람의 제출기록과 정답 제출수는 기록하지 않음
+                quizInfoUpdate(executeRequest.getQuizId(), isCorrect);
             }
         }
 
@@ -274,6 +275,13 @@ public class IdeServiceImpl implements IdeService {
         return codeRunResponse;
     }
 
+    /**
+     * 답인 제출 기록을 저장하는 메소드
+     * @param executeRequest
+     * @param isCorrect
+     * @param runTime
+     * @param memoryUsage
+     */
     private void saveSubmitRecord(CodeRunRequest executeRequest, boolean isCorrect, String runTime, String memoryUsage) {
         Optional<User> user = userRepository.findById(executeRequest.getUserId());
         Optional<Quiz> quiz = quizRepository.findById(executeRequest.getQuizId());
@@ -300,6 +308,15 @@ public class IdeServiceImpl implements IdeService {
         submitRecordRepository.save(submitRecord);
     }
 
+    /**
+     * docker container 에 코드를 실행시켰을 때 일정시간 이상 응답되지 않으면 에러를 내기 위한 메소드
+     * @param execId
+     * @param outputStream
+     * @param errorStream
+     * @param timeout
+     * @param unit
+     * @return
+     */
     private boolean execCommandWithTimeout(String execId, ByteArrayOutputStream outputStream, ByteArrayOutputStream errorStream, long timeout, TimeUnit unit) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<?> future = executor.submit(() -> {
@@ -325,6 +342,10 @@ public class IdeServiceImpl implements IdeService {
         }
     }
 
+    /**
+     * 응답시간이 초과되었을 때 컨테이너를 멈추기 위한 메소드
+     * @param containerId
+     */
     private void stopContainer(String containerId) {
         try {
             dockerClient.stopContainerCmd(containerId).exec();
@@ -333,6 +354,11 @@ public class IdeServiceImpl implements IdeService {
         }
     }
 
+    /**
+     * 퀴즈의 정보를 업데이트하기 위한 메소드
+     * @param quizId
+     * @param isCorrect
+     */
     public void quizInfoUpdate(Long quizId, boolean isCorrect) {
         Optional<Quiz> findById = quizRepository.findById(quizId);
 
@@ -348,10 +374,21 @@ public class IdeServiceImpl implements IdeService {
         }
     }
 
+    /**
+     * 퀴즈 정답 비교하기위한 메소드
+     * @param quizAnswer
+     * @param stdout
+     * @return
+     */
     private boolean compareOutput(String quizAnswer, String stdout) {
         return quizAnswer.equals(stdout);
     }
 
+    /**
+     * 퀴즈의 정답을 가져오기위한 메소드
+     * @param quizId
+     * @return
+     */
     private String getQuizAnswer(Long quizId) {
         Optional<Quiz> findById = quizRepository.findById(quizId);
 
@@ -362,6 +399,11 @@ public class IdeServiceImpl implements IdeService {
         return findById.get().getQuizAnswer().replace("\\n", "\n");
     }
 
+    /**
+     * 각 언어별로 파일의 확장자를 가져오기 위한 메소드
+     * @param language
+     * @return
+     */
     private String getFileExtension(LanguageType language) {
         switch (language) {
             case JAVA:
@@ -375,6 +417,11 @@ public class IdeServiceImpl implements IdeService {
         }
     }
 
+    /**
+     * hh:mm:ss 를 milliseconds 로 바꾸기 위한 메소드
+     * @param timeStr
+     * @return
+     */
     private String convertToMilliseconds(String timeStr) {
         String[] parts = timeStr.split(":");
         long milliseconds = 0;
@@ -389,6 +436,12 @@ public class IdeServiceImpl implements IdeService {
         return String.valueOf(milliseconds);
     }
 
+    /**
+     * 임시로 만들었던 디렉토리를 전부 삭제하기 위한 메소드 ( 도커 컨테이너 내부 )s
+     * @param tempDirHost
+     * @param containerId
+     * @param tempDirContainer
+     */
     private void cleanup(String tempDirHost, String containerId, String tempDirContainer) {
         // 호스트에서 디렉토리 삭제
         deleteDirectory(new File(tempDirHost));
@@ -407,6 +460,10 @@ public class IdeServiceImpl implements IdeService {
         }
     }
 
+    /**
+     * 디렉토리 삭제를 위한 메소드 ( 호스트 )
+     * @param directory
+     */
     private void deleteDirectory(File directory) {
         if (directory.isDirectory()) {
             File[] files = directory.listFiles();
