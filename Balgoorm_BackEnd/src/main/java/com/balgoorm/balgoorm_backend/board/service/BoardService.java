@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -58,8 +59,16 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardResponseDTO> searchBoardList(int page, int pageSize, String direction) {
-        return boardRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.fromString(direction), "boardCreateDate")))
+    public List<BoardResponseDTO> searchBoardList(int page, int pageSize, String direction, String sortBy) {
+        Pageable pageable;
+        if ("likes".equals(sortBy)) {
+            pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.fromString(direction), "likesCount"));
+        } else if ("views".equals(sortBy)) {
+            pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.fromString(direction), "views"));
+        } else {
+            pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.fromString(direction), "boardCreateDate"));
+        }
+        return boardRepository.findAll(pageable)
                 .stream()
                 .map(BoardResponseDTO::new)
                 .collect(Collectors.toList());

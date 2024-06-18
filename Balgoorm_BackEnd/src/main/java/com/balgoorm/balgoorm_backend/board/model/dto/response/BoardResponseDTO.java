@@ -17,7 +17,8 @@ public class BoardResponseDTO {
     private LocalDateTime boardCreateDate;
     private List<String> imageUrls;
     private List<CommentResponseDTO> comments; // 댓글 리스트 추가
-
+    private int likesCount;
+    private int views;
 
     @Builder
     public BoardResponseDTO(Board board) {
@@ -31,6 +32,7 @@ public class BoardResponseDTO {
         this.comments = board.getComments().stream()
                 .map(CommentResponseDTO::new)
                 .collect(Collectors.toList());
+        this.likesCount = board.getLikesCount();
+        this.views = board.getViewCount();
     }
 }
-
