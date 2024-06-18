@@ -1,4 +1,4 @@
-package com.balgoorm.balgoorm_backend.board.model.dto;
+package com.balgoorm.balgoorm_backend.board.model.dto.response;
 
 import com.balgoorm.balgoorm_backend.board.model.entity.Comment;
 import lombok.Getter;

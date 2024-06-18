@@ -1,4 +1,4 @@
-package com.balgoorm.balgoorm_backend.board.model.dto;
+package com.balgoorm.balgoorm_backend.board.model.dto.response;
 
 import com.balgoorm.balgoorm_backend.board.model.entity.Board;
 import com.balgoorm.balgoorm_backend.board.model.entity.BoardImage;

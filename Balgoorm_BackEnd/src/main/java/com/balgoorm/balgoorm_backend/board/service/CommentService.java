@@ -1,7 +1,7 @@
 package com.balgoorm.balgoorm_backend.board.service;
 
-import com.balgoorm.balgoorm_backend.board.model.dto.CommentRequestDTO;
-import com.balgoorm.balgoorm_backend.board.model.dto.CommentResponseDTO;
+import com.balgoorm.balgoorm_backend.board.model.dto.request.CommentRequestDTO;
+import com.balgoorm.balgoorm_backend.board.model.dto.response.CommentResponseDTO;
 import com.balgoorm.balgoorm_backend.board.model.entity.Board;
 import com.balgoorm.balgoorm_backend.board.model.entity.Comment;
 import com.balgoorm.balgoorm_backend.board.repository.BoardRepository;

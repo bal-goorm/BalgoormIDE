@@ -1,9 +1,9 @@
 package com.balgoorm.balgoorm_backend.board.service;
 
-import com.balgoorm.balgoorm_backend.board.model.dto.BoardImageUploadDTO;
-import com.balgoorm.balgoorm_backend.board.model.dto.BoardWriteRequestDTO;
-import com.balgoorm.balgoorm_backend.board.model.dto.BoardEditRequest;
-import com.balgoorm.balgoorm_backend.board.model.dto.BoardResponseDTO;
+import com.balgoorm.balgoorm_backend.board.model.dto.request.BoardImageUploadDTO;
+import com.balgoorm.balgoorm_backend.board.model.dto.request.BoardWriteRequestDTO;
+import com.balgoorm.balgoorm_backend.board.model.dto.request.BoardEditRequest;
+import com.balgoorm.balgoorm_backend.board.model.dto.response.BoardResponseDTO;
 import com.balgoorm.balgoorm_backend.board.model.entity.Board;
 import com.balgoorm.balgoorm_backend.board.model.entity.BoardImage;
 import com.balgoorm.balgoorm_backend.board.repository.BoardRepository;
