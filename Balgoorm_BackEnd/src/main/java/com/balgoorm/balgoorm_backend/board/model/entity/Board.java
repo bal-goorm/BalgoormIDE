@@ -20,6 +20,7 @@ public class Board {
     private String boardTitle;
     private String boardContent;
     private LocalDateTime boardCreateDate;
+    private int likesCount; // 좋아요 수 필드 추가
 
     @ManyToOne
     @JoinColumn(name = "USER_ID", nullable = false)
@@ -39,10 +40,19 @@ public class Board {
         this.boardContent = boardContent;
         this.boardCreateDate = boardCreateDate;
         this.user = user;
+        this.likesCount = 0; // 기본값으로 좋아요 수를 0으로 설정
     }
 
     public void update(String boardTitle, String boardContent) {
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
+    }
+
+    public void incrementLikes() {
+        this.likesCount++;
+    }
+
+    public void decrementLikes() {
+        this.likesCount--;
     }
 }

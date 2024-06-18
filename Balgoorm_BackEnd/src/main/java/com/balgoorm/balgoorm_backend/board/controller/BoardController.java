@@ -5,10 +5,10 @@ import com.balgoorm.balgoorm_backend.board.model.dto.request.BoardImageUploadDTO
 import com.balgoorm.balgoorm_backend.board.model.dto.request.BoardWriteRequestDTO;
 import com.balgoorm.balgoorm_backend.board.model.dto.response.BoardResponseDTO;
 import com.balgoorm.balgoorm_backend.board.service.BoardService;
+import com.balgoorm.balgoorm_backend.user.auth.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -33,12 +33,14 @@ public class BoardController {
             @RequestParam("direction") Sort.Direction direction) {
         return boardService.searchBoardList(page, pageSize, direction.name());
     }
+
     @PostMapping
     public BoardResponseDTO createBoard(BoardWriteRequestDTO boardWriteRequestDTO,
                                         @ModelAttribute BoardImageUploadDTO boardImageUploadDTO,
                                         Authentication authentication) throws IOException {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        Long boardId = boardService.saveBoard(boardWriteRequestDTO, boardImageUploadDTO, userDetails.getUsername());
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long userId = userDetails.getUserId();
+        Long boardId = boardService.saveBoard(boardWriteRequestDTO, boardImageUploadDTO, userId);
         return boardService.searchBoard(boardId);
     }
 
@@ -46,13 +48,35 @@ public class BoardController {
     public BoardResponseDTO editBoard(@PathVariable("id") Long boardId,
                                       @ModelAttribute BoardEditRequest boardEditRequest,
                                       Authentication authentication) throws IOException {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return boardService.editBoard(boardId, boardEditRequest, userDetails.getUsername());
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long userId = userDetails.getUserId();
+        return boardService.editBoard(boardId, boardEditRequest, userId);
     }
 
     @DeleteMapping("/{id}")
     public void deleteBoard(@PathVariable("id") Long boardId, Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        boardService.deleteBoard(boardId, userDetails.getUsername());
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long userId = userDetails.getUserId();
+        boardService.deleteBoard(boardId, userId);
+    }
+
+    @PostMapping("/{id}/like")
+    public String likeBoard(@PathVariable("id") Long boardId, Authentication authentication) {
+        try {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            Long userId = userDetails.getUserId();
+            boardService.likeBoard(boardId, userId);
+            return "Liked the board";
+        } catch (IllegalArgumentException e) {
+            return e.getMessage();
+        }
+    }
+
+    @PostMapping("/{id}/unlike")
+    public String unlikeBoard(@PathVariable("id") Long boardId, Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long userId = userDetails.getUserId();
+        boardService.unlikeBoard(boardId, userId);
+        return "Unliked the board";
     }
 }

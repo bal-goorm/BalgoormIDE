@@ -6,8 +6,10 @@ import com.balgoorm.balgoorm_backend.board.model.dto.request.BoardEditRequest;
 import com.balgoorm.balgoorm_backend.board.model.dto.response.BoardResponseDTO;
 import com.balgoorm.balgoorm_backend.board.model.entity.Board;
 import com.balgoorm.balgoorm_backend.board.model.entity.BoardImage;
+import com.balgoorm.balgoorm_backend.board.model.entity.Likes;
 import com.balgoorm.balgoorm_backend.board.repository.BoardRepository;
 import com.balgoorm.balgoorm_backend.board.repository.BoardImageRepository;
+import com.balgoorm.balgoorm_backend.board.repository.LikesRepository;
 import com.balgoorm.balgoorm_backend.user.model.entity.User;
 import com.balgoorm.balgoorm_backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardImageRepository boardImageRepository;
     private final UserRepository userRepository;
+    private final LikesRepository likesRepository;
 
     @Value("${file.boardImagePath}")
     private String uploadFolder;
@@ -59,10 +62,9 @@ public class BoardService {
                 .collect(Collectors.toList());
     }
 
-
     @Transactional
-    public Long saveBoard(BoardWriteRequestDTO boardWriteRequestDTO, BoardImageUploadDTO boardImageUploadDTO, String userId) {
-        User user = userRepository.findByUserId(userId)
+    public Long saveBoard(BoardWriteRequestDTO boardWriteRequestDTO, BoardImageUploadDTO boardImageUploadDTO, Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자 ID에 해당하는 회원이 없습니다."));
 
         Board board = Board.builder()
@@ -110,11 +112,10 @@ public class BoardService {
         }
     }
 
-
-@Transactional
-    public BoardResponseDTO editBoard(Long boardId, BoardEditRequest boardEditRequest, String userId) throws IOException {
+    @Transactional
+    public BoardResponseDTO editBoard(Long boardId, BoardEditRequest boardEditRequest, Long userId) throws IOException {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
-        if (!board.getUser().getUserId().equals(userId)) {
+        if (!board.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("다른 사용자의 게시글은 수정할 수 없습니다.");
         }
         board.setBoardTitle(boardEditRequest.getBoardTitle());
@@ -127,11 +128,36 @@ public class BoardService {
     }
 
     @Transactional
-    public void deleteBoard(Long boardId, String userId) {
+    public void deleteBoard(Long boardId, Long userId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
-        if (!board.getUser().getUserId().equals(userId)) {
+        if (!board.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("다른 사용자의 게시글은 삭제할 수 없습니다.");
         }
         boardRepository.deleteById(boardId);
+    }
+
+    @Transactional
+    public void likeBoard(Long boardId, Long userId) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("Board not found with id: " + boardId));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
+
+        if (!likesRepository.existsByUserIdAndBoardBoardId(userId, boardId)) {
+            Likes like = new Likes(user, board);
+            likesRepository.save(like);
+            board.incrementLikes(); // 좋아요 수 증가
+            boardRepository.save(board);
+        } else {
+            throw new IllegalArgumentException("User already liked this board");
+        }
+    }
+
+    @Transactional
+    public void unlikeBoard(Long boardId, Long userId) {
+        Likes like = likesRepository.findByUserIdAndBoardBoardId(userId, boardId)
+                .orElseThrow(() -> new IllegalArgumentException("Like not found for user and board"));
+        likesRepository.delete(like);
+        Board board = like.getBoard();
+        board.decrementLikes(); // 좋아요 수 감소
+        boardRepository.save(board);
     }
 }

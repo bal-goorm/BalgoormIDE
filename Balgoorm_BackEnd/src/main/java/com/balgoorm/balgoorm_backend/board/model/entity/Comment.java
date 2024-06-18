@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -17,6 +19,7 @@ public class Comment {
     private Long commentId;
     private String commentContent;
     private LocalDateTime commentCreateDate;
+    private int likesCount;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID", nullable = false)
@@ -26,15 +29,27 @@ public class Comment {
     @JoinColumn(name = "BOARD_ID", nullable = false)
     private Board board;
 
-    @PrePersist
-    protected void onCreate() {
-        this.commentCreateDate = LocalDateTime.now();
-    }
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Likes> likes = new ArrayList<>(); // 좋아요 리스트
 
     @Builder
-    public Comment(String commentContent, User user, Board board) {
+    public Comment(String commentContent, LocalDateTime commentCreateDate, User user, Board board) {
         this.commentContent = commentContent;
+        this.commentCreateDate = commentCreateDate; // 초기값 설정
         this.user = user;
         this.board = board;
+        this.likesCount = 0; // 기본값으로 좋아요 수를 0으로 설정
+    }
+
+    public int getLikeCount() {
+        return likesCount;
+    }
+
+    public void incrementLikes() {
+        this.likesCount++;
+    }
+
+    public void decrementLikes() {
+        this.likesCount--;
     }
 }
