@@ -2,6 +2,7 @@ package com.balgoorm.balgoorm_backend.user.config;
 
 import com.balgoorm.balgoorm_backend.user.auth.CustomAuthenticationSuccessHandler;
 import com.balgoorm.balgoorm_backend.user.auth.CustomUserDetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,23 +15,26 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) {
-        this.customUserDetailsService = customUserDetailsService;
-        this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
-    }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .authorizeHttpRequests(auth -> {
-                    auth
-                            .anyRequest().permitAll(); // 테스트를 위해 모든 요청 허용
-                })
+                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers( "/css/", "/js/", "/img/", "/font/").permitAll()
+//                        .requestMatchers("/admin/").hasRole("ADMIN")
+//                        .requestMatchers("/member/", "/board/**").hasRole("USER")
+//                        .requestMatchers("/login","/signup").anonymous()
+                        .anyRequest().permitAll()
+                )
+                .cors(cors -> cors.disable())
+                .csrf(csrf -> csrf.disable())
+                .formLogin(formLogin -> formLogin.disable())
+                .httpBasic(httpBasic -> httpBasic.disable()) // HTTP Basic 비활성화; // 간단히 하기 위해 CSRF 비활성화. 실제 운영 환경에서는 활성화 고려
                 .formLogin(login -> {
                     login.loginPage("/login.html") // 로그인 폼
                             .loginProcessingUrl("/login") // 로그인 폼이 제출될 URL 설정
@@ -53,9 +57,8 @@ public class SecurityConfig {
                             .maximumSessions(1)
                             .maxSessionsPreventsLogin(false);
                 })
-                .userDetailsService(customUserDetailsService)
-                .cors(cors -> cors.disable())
-                .csrf(csrf -> csrf.disable()); // 간단히 하기 위해 CSRF 비활성화. 실제 운영 환경에서는 활성화 고려
+                .userDetailsService(customUserDetailsService);
+
 
         return httpSecurity.build();
     }

@@ -1,5 +1,6 @@
 package com.balgoorm.balgoorm_backend.quiz.service;
 
+import com.balgoorm.balgoorm_backend.quiz.model.dto.request.RequestSaveQuiz;
 import com.balgoorm.balgoorm_backend.quiz.model.dto.response.ResponseQuizDetail;
 import com.balgoorm.balgoorm_backend.quiz.model.dto.response.ResponseQuizList;
 import com.balgoorm.balgoorm_backend.quiz.model.entity.Quiz;
@@ -10,6 +11,7 @@ import com.balgoorm.balgoorm_backend.quiz.repository.CustomQuizRepositoryImpl;
 import com.balgoorm.balgoorm_backend.quiz.repository.QuizRepository;
 import com.balgoorm.balgoorm_backend.quiz.repository.UserRecQuizRepository;
 import com.balgoorm.balgoorm_backend.user.model.entity.User;
+import com.balgoorm.balgoorm_backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,7 @@ public class QuizServiceImpl implements QuizService{
     private final QuizRepository quizRepository;
     private final CustomQuizRepository customQuizRepository;
     private final UserRecQuizRepository userRecQuizRepository;
+    private final UserRepository userRepository;
 
     @Value("${quiz.list.size}")
     private int pageSize;
@@ -55,11 +58,18 @@ public class QuizServiceImpl implements QuizService{
 
         Optional<Quiz> findQuiz = quizRepository.findById(quizId);
         if (!findQuiz.isPresent()) {
-            // TODO : throw Exception ( can't find quiz )
+            // TODO : throw Exception ( can't find quiz , custom Exception)
+            throw new RuntimeException("Quiz not found");
         }
 
         // TODO : find User ( user repository 연동 후에 작업 )
-        User user = null;
+        Optional<User> findUser = userRepository.findById(userId);
+        if(!findQuiz.isPresent()){
+            // TODO : throw Exception ( can't find user , custom Exception)
+            throw new RuntimeException("User not found");
+        }
+
+        User user = findUser.get();
 
         Optional<UserRecQuiz> userRecQuiz = userRecQuizRepository.findByUserAndQuiz(user, findQuiz.get());
 
@@ -75,5 +85,22 @@ public class QuizServiceImpl implements QuizService{
                 .build();
 
         return quizDetail;
+    }
+
+    @Override
+    public void saveQuiz(RequestSaveQuiz requestSaveQuiz) {
+
+        Optional<User> findUser = userRepository.findById(requestSaveQuiz.getUserId());
+
+        if (!findUser.isPresent()) {
+            // TODO : throw Exception ( can't find user , custom Exception )
+            throw new RuntimeException("User not found");
+        }
+
+        Quiz saveQuiz = Quiz.builder()
+                .build();
+
+
+
     }
 }

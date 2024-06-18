@@ -42,7 +42,7 @@ public class QuizController {
     }
 
     @GetMapping("/detail/{quizId}")
-    public ResponseEntity getQuizDetail(@PathVariable Long quizId, @RequestParam Long userId){
+    public ResponseEntity getQuizDetail(@PathVariable Long quizId, @RequestParam(defaultValue = "0") Long userId){
 
         ResponseQuizDetail quizDetail = quizService.getQuizDetail(quizId, userId);
 
@@ -55,9 +55,9 @@ public class QuizController {
     @PostMapping("/save")
     public ResponseEntity saveQuiz(@RequestBody RequestSaveQuiz requestSaveQuiz){
 
+        quizService.saveQuiz(requestSaveQuiz);
 
-
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok("정상적으로 저장되었습니ㅏㄷ");
     }
 
 
