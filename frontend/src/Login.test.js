@@ -67,6 +67,6 @@ test('successful login', async () => {
   fireEvent.click(screen.getByRole("button", {name: /로그인 버튼/i}));
   
   await waitFor(() => {
-    expect(window.alert).toHaveBeenCalledWith('login failed');
+    expect(window.alert).toHaveBeenCalledWith({"message" : "login failed"});
   });
 });
