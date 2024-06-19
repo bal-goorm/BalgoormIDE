@@ -10,11 +10,17 @@ public class SubmitRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long recordId;
+
     private LocalDateTime submitDate;
+
     private String submitCode;
+
     private Boolean isSuccess;
+
     private String errorLog;
+
     private Float executionTime;
+
     private int memoryUsage;
 
     @ManyToOne
