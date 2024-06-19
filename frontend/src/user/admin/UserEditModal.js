@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Form, Modal } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 
 function UserEditModal({ isOpen, onRequestClose, user, onSave}) {
@@ -13,7 +12,7 @@ function UserEditModal({ isOpen, onRequestClose, user, onSave}) {
     }, [user]);
     
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         try {
             const response = await axios.put(`http://localhost:8080/users/${user.id}`, {nickname, email});
@@ -27,7 +26,7 @@ function UserEditModal({ isOpen, onRequestClose, user, onSave}) {
         } catch (error) {
             console.error('update 실패', error);
         }
-    }
+    }, [nickname, email, user.id, user.create_date, onSave, onRequestClose]);
 
     return (
         <Modal show={isOpen} onHide={onRequestClose}>

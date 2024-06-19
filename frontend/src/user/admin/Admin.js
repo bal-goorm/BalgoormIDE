@@ -6,17 +6,15 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import UserEditModal from './UserEditModal.js';
 import './Admin.css';
-import Modal from '../../components/Modal.js';
 
 function Admin() {
   const initialUsers = [
     { id: "lee99", nickname: "alice", email: "alice@example.com", create_date: "2024-06-14 10:00 AM"},
-    { id: 2, nickname: "Bob", email: "bob@example.com", create_date: "2024-06-10 02:00 PM" },
-    { id: 3, nickname: "Charlie", email: "charlie@example.com", create_date: "2024-06-09 04:00 AM" }
+    { id: "lhg12", nickname: "Bob", email: "bob@example.com", create_date: "2024-06-10 02:00 PM" },
+    { id: "lee29", nickname: "Charlie", email: "charlie@example.com", create_date: "2024-06-09 04:00 AM" }
   ]
 
   const [users, setUsers] = useState(initialUsers);
@@ -71,7 +69,6 @@ function Admin() {
     setUsers(updateUsers);
     setShowModal(false);
   }
-  
   
   return (
     <div>
