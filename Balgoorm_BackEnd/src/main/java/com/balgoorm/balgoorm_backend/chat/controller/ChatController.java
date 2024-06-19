@@ -33,9 +33,9 @@ public class ChatController {
     @MessageMapping("/chat")
     @SendTo("/sub/chat")
     public String enterChat(ChatRequest chatRequest) {
-        chatService.enterChat(chatRequest);
+        Chat savedChat = chatService.enterChat(chatRequest);
         log.info("Message: {}", chatRequest.getChatBody());
-        return chatRequest.getSenderName() + ": " + chatRequest.getChatBody();
+        return savedChat.getSenderName() + ": " + savedChat.getChatBody();
     }
 
     @GetMapping("history")
