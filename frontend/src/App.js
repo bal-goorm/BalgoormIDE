@@ -12,9 +12,11 @@ import ProtectedRoute from './user/auth/ProtectedRoute.js';
 import MyPage from './user/mypage/MyPage.js';
 import Admin from './user/admin/Admin.js';
 import Delete from './user/Delete.js';
+import QuizList from './quiz/QuizList.js';
+import TestEditorPage from './ide/EditorPage.js';
 
 function App() {
- 
+
   const { sendMessage, fetchMessage } = UseWebSocket();
 
   return (
@@ -36,6 +38,11 @@ function App() {
                 {/* <Route path="/main" element={<MainPage />} /> */}
                 {/* <Route path="/editor" element={<EditorPage />} />
                 <Route path="/editortest" element={<TestEditorPage />} /> */}
+                <Route path="/editor" element={<EditorPage />} />
+                <Route path="/editortest" element={<TestEditorPage />} />
+
+                <Route path="/quizlist" element={<QuizList />} />
+                <Route path="/quiz/detail/:id" element={<EditorPage />} />
                 {/* 주석 처리된 경로 추가 가능 */}
                 {/* <Route path="/edit" element={<ProtectedRoute><EditPage /></ProtectedRoute>} /> */}
                 {/* <Route path="/chat" element={<Chat />} /> */}
