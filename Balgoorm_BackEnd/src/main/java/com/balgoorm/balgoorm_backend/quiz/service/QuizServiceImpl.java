@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -98,9 +99,19 @@ public class QuizServiceImpl implements QuizService{
         }
 
         Quiz saveQuiz = Quiz.builder()
+                .user(findUser.get())
+                .quizTitle(requestSaveQuiz.getQuizTitle())
+                .quizContent(requestSaveQuiz.getQuizContent())
+                .quizPoint(requestSaveQuiz.getQuizPoint())
+                .quizRegDate(LocalDateTime.now())
+                .quizRecCnt(0)
+                .quizLevel(requestSaveQuiz.getQuizLevel())
+                .quizAnswer(requestSaveQuiz.getQuizAnswer())
+                .correctCnt(0)
+                .submitCnt(0)
                 .build();
 
-
+        quizRepository.save(saveQuiz);
 
     }
 }

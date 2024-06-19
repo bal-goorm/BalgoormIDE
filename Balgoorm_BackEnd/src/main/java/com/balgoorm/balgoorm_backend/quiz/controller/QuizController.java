@@ -57,7 +57,7 @@ public class QuizController {
 
         quizService.saveQuiz(requestSaveQuiz);
 
-        return ResponseEntity.ok("정상적으로 저장되었습니ㅏㄷ");
+        return ResponseEntity.ok("정상적으로 저장되었습니다");
     }
 
 
