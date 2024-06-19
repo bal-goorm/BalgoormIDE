@@ -2,11 +2,11 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Editor from '@monaco-editor/react';
 import { Button, Tabs, Tab } from 'react-bootstrap';
-import Modal from '../components/Modal';
+import Modal from '../components/modal/Modal';
 import axios from 'axios';
 import './EditorPage.css';
 
-function TestEditorPage() {
+function EditorPage() {
   const { id } = useParams(); // 퀴즈 ID에 해당
   const editorRef = useRef(null);
   const [output, setOutput] = useState('');
@@ -139,4 +139,4 @@ add(5, 10);`}
   );
 }
 
-export default TestEditorPage;
+export default EditorPage;

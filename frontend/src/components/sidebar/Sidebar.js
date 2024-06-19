@@ -20,7 +20,7 @@ function Sidebar() {
         <br />
         <ul>
           <li><Link to="/">메인 화면</Link></li>
-          <li><Link to="/editor">문제 풀기</Link></li>
+          <li><Link to="/quizlist">문제 풀기</Link></li>
           <li><Link to="/editortest">테스트용 IDE</Link></li>
           <li><Link to="/editor">질의응답 게시판</Link></li>
           <li><Link to="/editor">Test Menu</Link></li>

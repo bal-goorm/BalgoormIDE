@@ -13,19 +13,19 @@ import './Chat.css'
 function Chat({sendMessage, fetchMessage}) {
   const { message, addMessage, handleKeyDown, inputValue, setInputValue} = useMessage();
 
-  // const sendMessage = useCallback(() => {
-  //   if (inputValue.trim() !== '') {
-  //     // 임시로 로컬 메시지 객체 생성
-  //     const newMessage = {
-  //       id: Date.now(), // 임시 ID
-  //       nickname: 'lee99', // 고정 닉네임
-  //       message: inputValue,
-  //       currentUser: true // 현재 사용자로 설정
-  //     };
-  //     addMessage(newMessage); // 메시지 리스트에 추가
-  //     setInputValue(''); // 입력 필드 초기화
-  //   }
-  // }, [inputValue, addMessage, setInputValue]);
+  const ssssendMessage = useCallback(() => {
+    if (inputValue.trim() !== '') {
+      // 임시로 로컬 메시지 객체 생성
+      const newMessage = {
+        id: Date.now(), // 임시 ID
+        nickname: 'lee99', // 고정 닉네임
+        message: inputValue,
+        currentUser: true // 현재 사용자로 설정
+      };
+      addMessage(newMessage); // 메시지 리스트에 추가
+      setInputValue(''); // 입력 필드 초기화
+    }
+  }, [inputValue, addMessage, setInputValue]);
   
   return (
   <div>
@@ -55,7 +55,7 @@ function Chat({sendMessage, fetchMessage}) {
           onKeyDown={handleKeyDown} 
           />
           </Form.Group>
-          <Button variant="primary" className='button-inline' onClick={sendMessage}>전송</Button>
+          <Button variant="primary" className='button-inline' onClick={ssssendMessage}>전송</Button>
           <Button variant="secondary" className='button-inline' onClick={fetchMessage}>새로 고침</Button>
       </Form>
     </Container> 
