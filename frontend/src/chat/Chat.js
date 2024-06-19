@@ -1,100 +1,66 @@
-// /**
-//  * 채팅 페이지
-//  * STOMP 라이브러리로 연결
-//  * 화면 구현 해야됨
-//  */
+/**
+ * 채팅 페이지
+ * STOMP 라이브러리로 연결
+ * 화면 구현 해야됨
+ * 채팅하는 인원 수 해보기
+ */
 
-// import React, { useEffect, useRef, useState } from 'react'
-// import { Stomp } from '@stomp/stompjs';
-// import axios from 'axios';
-// import { Button, Container, Form, ListGroup, Nav, Navbar } from 'react-bootstrap';
-// import logo2 from '../img/Logo2.png';
-// import { useNavigate } from 'react-router-dom';
-// import NavBar from '../user/components/Navbar.js';
+import React, { useCallback } from 'react'
+import { Button, Container, Form } from 'react-bootstrap';
+import { useMessage } from './MessageProvider';
+import './Chat.css'
 
-// function Chat() {
-//   const [message, setMessage] = useState([]); // 채팅 내용 저장
-//   const [inputValue, setInputValue] = useState(''); // 사용자 입력 저장 변수
-//   const stompClient = useRef(null);
+function Chat({sendMessage, fetchMessage}) {
+  const { message, addMessage, handleKeyDown, inputValue, setInputValue} = useMessage();
 
-//   const connect = () => {
-//     const socket = new WebSocket("ws://localhost:8080/chat");
-//     stompClient.current = Stomp.over(socket);
-//     stompClient.current.subscribe(`/sub/chat`, (message) => {
-//       const newMessage = JSON.parse(message.body);
-//       setMessage((prevMessage) => [...prevMessage, newMessage]);
-//     });
-//   }
-
-//   const disconnect = () => {
-//     if(stompClient.current) {
-//       stompClient.current.disconnect();
-//     }
-//   }
-
-//   const fetchMessage = async () => {
-//     return await axios.get('http://localhost:8080/chat/1')
-//     .then(response => {
-//       setMessage(response.data);
-//     });
-//   }
-
-//   useEffect(() => {
-//     connect();
-//     fetchMessage();
-//     return () => {
-//       disconnect();
-//     }
-//   }, []);
+  // const sendMessage = useCallback(() => {
+  //   if (inputValue.trim() !== '') {
+  //     // 임시로 로컬 메시지 객체 생성
+  //     const newMessage = {
+  //       id: Date.now(), // 임시 ID
+  //       nickname: 'lee99', // 고정 닉네임
+  //       message: inputValue,
+  //       currentUser: true // 현재 사용자로 설정
+  //     };
+  //     addMessage(newMessage); // 메시지 리스트에 추가
+  //     setInputValue(''); // 입력 필드 초기화
+  //   }
+  // }, [inputValue, addMessage, setInputValue]);
   
-//   const sendMessage = () => {
-//     if(stompClient.current && inputValue) {
-//       stompClient.current.send("/pub/chat", {}, JSON.stringify({
-//         nickname: 'lee99',
-//         message: inputValue
-//       }));
-//       setInputValue('');
-//     }
-//   }
+  return (
+  <div>
+    <Container className='chatting-container'>
+      {message.map((msg) => (
+        <div className={`message-box ${msg.currentUser ? 'right' : 'left'}`} key={msg.id}>
+          {msg.currentUser ? (
+            <>
+              <div className='message-content'>{msg.message}</div>
+              <span className='user-badge'>{msg.nickname}</span>
+            </>
+          ) : (
+            <>
+              <span className='user-badge'>{msg.nickname}</span>
+              <div className='message-content'>{msg.message}</div>
+            </>
+          )}
+        </div>
+      ))}
+      <Form className='chatting-form mt-3'>
+        <Form.Group className="mb-3 form-group-inline" controlId="chatMessageInput">
+          <Form.Control className='form-control-inline'
+          type="text" 
+          placeholder="메시지 입력" 
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)} 
+          onKeyDown={handleKeyDown} 
+          />
+          </Form.Group>
+          <Button variant="primary" className='button-inline' onClick={sendMessage}>전송</Button>
+          <Button variant="secondary" className='button-inline' onClick={fetchMessage}>새로 고침</Button>
+      </Form>
+    </Container> 
+  </div>
+  )
+}
 
-//   const handleMessageChange = (e) => {
-//     setInputValue(e.target.value);
-//   }
-
-//   const handleKeyPress = (e) => {
-//     if(e.key === 'Enter') {
-//       sendMessage();
-//     }
-//   }
-
-//   return (
-//     <div>
-//       <NavBar />
-//       <Container style={{ marginTop: '20px' }}>
-//         <ListGroup>
-//           {message.map((msg, index) => (
-//             <ListGroup.Item key={index}>
-//               <strong>{msg.nickname}:</strong> {msg.message}
-//               </ListGroup.Item>
-//           ))}
-//         </ListGroup>
-//         <Form>
-//           <Form.Group className="mb-3" controlId="chatMessageInput">
-//             <Form.Control 
-//             type="text" 
-//             placeholder="메시지 입력" 
-//             value={inputValue} 
-//             onChange={handleMessageChange} 
-//             onKeyPress={handleKeyPress} 
-//             />
-//           </Form.Group>
-//           <Button variant="primary" 
-//           onClick={sendMessage}
-//           >전송</Button>
-//         </Form>
-//       </Container> 
-//     </div>
-//   )
-// }
-
-// export default Chat;
+export default Chat;
