@@ -1,6 +1,7 @@
 /**
  * 로그인 페이지
  * 아이디 찾기, 비밀번호 변경 시간되면 만들기
+ * 쿠키로 토큰 관리하기
  * 로그인을 해야 마이페이지 접근 가능하게 설정
  * 관리자 계정으로 로그인하면 관리자 페이지 접근 가능하게 설정
  */
@@ -8,11 +9,11 @@
 import axios from 'axios';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Button, Container, Form, Nav, Navbar } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button, Container, Form } from 'react-bootstrap';
 import { useNavigate} from 'react-router-dom';
-import logo1 from "../img/Logo1.png";
-import { useAuth } from './auth/AuthContext';
+import logo1 from "../../img/Logo1.png";
+import { useAuth } from '../auth/AuthContext.js';
+import './Login.css';
 
 function Login() {
     const { register, handleSubmit, formState: {errors} } = useForm();
@@ -24,10 +25,7 @@ function Login() {
       const { id, password }  = data;
 
       try {
-        const response = await axios.post('http://localhost:8080/login', {
-          id,
-          password
-        });
+        const response = await axios.post('http://localhost:8080/login', data);
         const { token, role } = response.data;
 
         localStorage.setItem('token', token);
@@ -45,11 +43,11 @@ function Login() {
     <div>      
       <Container className="d-flex flex-column align-items-center justify-content-center min-vh-100">
         <div className="text-center mb-4">
-          <img src={logo1} alt="BalGoorm Logo" style={{ width: '300px' }} />
-          <h1 className="mt-2" style={{ color: '#3498db' }}>BalGoorm</h1>
+          <img src={logo1} alt="BalGoorm Logo" className="logo-img" />
+          <h1 className="logo-text mt-2">BalGoorm</h1>
         </div>
         
-        <Form onSubmit={handleSubmit(submitForm)} className="w-100" style={{ maxWidth: '300px' }}>
+        <Form onSubmit={handleSubmit(submitForm)} className="login-form w-100">
           <Form.Group controlId="formId">
             <Form.Label htmlFor='id'>아이디</Form.Label>
             <Form.Control 
@@ -59,7 +57,7 @@ function Login() {
             aria-label='아이디'
             {...register("id", {required: "아이디를 입력해주세요"})} />
           </Form.Group>
-          {errors.id && <div style={{color: "red", marginTop: "10px"}}>{errors.id.message}</div>}
+          {errors.id && <div className='error-message'>{errors.id.message}</div>}
           <br />
           
           <Form.Group controlId="formPassword">
@@ -71,7 +69,7 @@ function Login() {
             aria-label='비밀번호' 
             {...register("password", {required: "비밀번호를 입력하세요"})}/>
           </Form.Group>
-          {errors.password && <div style={{color: "red", marginTop: "10px"}}>{errors.password.message}</div>}
+          {errors.password && <div className='error-message'>{errors.password.message}</div>}
 
           <Button variant="primary" type="submit" className="w-100 mt-4" aria-label='로그인 버튼'>
             로그인

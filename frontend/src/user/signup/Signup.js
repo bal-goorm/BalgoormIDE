@@ -5,9 +5,9 @@
 import React from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { Button, Container, Form, Nav, Navbar } from "react-bootstrap";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import logo1 from "../img/Logo1.png";
+import { Button, Container, Form } from "react-bootstrap";
+import logo1 from "../../img/Logo1.png";
+import './Signup.css'
 
 function Signup() {
 
@@ -19,12 +19,7 @@ function Signup() {
 
     // api 호출 로직
     try {
-      const response = await axios.post('localhost:8080/signup', {
-                  id,
-                  nickname,
-                  email,
-                  password
-              });
+      const response = await axios.post('localhost:8080/signup', data);
           }
           catch(error) {
               alert(error.response.data);
@@ -33,19 +28,18 @@ function Signup() {
   
   return (
   <div>
-    
     <Container className="d-flex flex-column align-items-center justify-content-center min-vh-100">
       <div className="text-center mb-4">
-        <img src={logo1} alt="BalGoorm Logo" style={{ width: '300px' }} />
-        <h1 className="mt-2" style={{ color: '#3498db' }}>BalGoorm</h1>
+        <img src={logo1} alt="BalGoorm Logo" className="logo-img" />
+        <h1 className="mt-2 logo-text">BalGoorm</h1>
       </div>
       
-      <Form onSubmit={handleSubmit(submitForm)} className="w-100" style={{ maxWidth: '300px' }}>
+      <Form onSubmit={handleSubmit(submitForm)} className="w-100 signup-form" >
         <Form.Group controlId="id">
           <Form.Label>아이디</Form.Label>
           <Form.Control type="text" placeholder="id 입력" {...register("id", {required: "아이디를 입력해주세요"})} />
         </Form.Group>
-        {errors.id && <div style={{color: "red", marginTop: "10px"}}>{errors.id.message}</div>}
+        {errors.id && <div className='error-message'>{errors.id.message}</div>}
         <br />
         
         <Form.Group controlId="nickname">
@@ -54,7 +48,7 @@ function Signup() {
           {...register("nickname", 
           {required: "닉네임을 입력해주세요."})} />
         </Form.Group>
-        {errors.nickname && <div style={{color: "red", marginTop: "10px"}}>{errors.nickname.message}</div>}
+        {errors.nickname && <div className="error-message">{errors.nickname.message}</div>}
         <br />
 
         <Form.Group controlId="email">
@@ -67,14 +61,14 @@ function Signup() {
                 message: '이메일이 형식에 맞지 않습니다'
               }})} />
         </Form.Group>
-        {errors.email && <div style={{color: "red", marginTop: "10px"}}>{errors.email.message}</div>}
+        {errors.email && <div className="error-message">{errors.email.message}</div>}
         <br />
 
         <Form.Group controlId="password">
           <Form.Label>비밀번호</Form.Label>
           <Form.Control type="password" placeholder="비밀번호 입력" {...register("password", {required: "비밀번호를 입력해주세요."})}/>
         </Form.Group>
-        {errors.password && <div style={{color: "red", marginTop: "10px"}}>{errors.password.message}</div>}
+        {errors.password && <div className="error-message">{errors.password.message}</div>}
         <br />
 
         <Form.Group controlId="password">
