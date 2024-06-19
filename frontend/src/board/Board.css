@@ -1,0 +1,282 @@
+.board-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 1.25rem;
+  width: 80%; /* 게시글 리스트의 가로 폭을 조정 */
+  margin: auto;
+  background-color: #f9f9f9; /* 아주 연한 회색 배경색 추가 */
+}
+
+.board-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.board-title {
+  margin-bottom: 1.25rem;
+  text-align: center;
+  flex: 1; /* 가운데 정렬 유지 */
+}
+
+.new-post-button {
+  background-color: white;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  padding: .3125rem 1.25rem; /* 위아래 폭을 줄임 */
+  border-radius: 5px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.new-post-button:hover {
+  background-color: #f1f1f1;
+}
+
+.category-filter {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.category-select {
+  background-color: white;
+  color: black;
+  padding: .625rem 1.25rem;
+  border: 1px solid black;
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+.category-select:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.post-list {
+  width: 100%;
+  max-width: 70rem; /* 게시글 리스트의 최대 폭을 넓게 설정 */
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.post-item {
+  padding: .625rem 1.25rem;
+  border-bottom: 1px solid #ccc;
+  font-size: 0.9em; /* 글을 조금 작게 설정 */
+  margin-top: 10px; /* 글 위에 여백 추가 */
+  border: 1px solid #ccc;
+  background-color: white; /* 각 게시글 항목의 배경색을 흰색으로 설정 */
+  border-radius: 5px;
+}
+
+.post-item strong {
+  cursor: pointer;
+  text-align: left; /* 제목 텍스트를 왼쪽으로 정렬 */
+}
+
+.spacer {
+  height: 20px; /* 제목과 내용 사이의 여백 */
+}
+
+.content {
+  margin-top: 20px; /* 내용이 좀 더 아래에 표시되도록 수정 */
+  background-color: #f9f9f9; /* 아주 연한 회색 배경색 추가 */
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.fltk-code {
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+.comments {
+  margin-top: 10px;
+}
+
+.comment-title {
+  text-align: center; /* "댓글" 텍스트를 중앙에 위치 */
+}
+
+.comment {
+  margin-bottom: 10px;
+  padding: 8px;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+}
+
+.comment-form {
+  display: flex;
+  margin-top: 10px;
+}
+
+.comment-input {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.comment-button {
+  padding: 8px 12px;
+  background-color: white;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+  border: 1px solid black;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.comment-button:hover {
+  background-color: #f1f1f1;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.date {
+  margin-right: 10px;
+}
+
+.author {
+  font-weight: bold;
+  color: grey;
+  margin-right: .625rem; /* 수정 및 삭제 버튼과의 간격 설정 */
+}
+
+.button {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  padding: .3125rem .625rem;
+  cursor: pointer;
+  margin-left: .3125rem;
+}
+
+.button:hover {
+  background-color: #f1f1f1;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 70rem; /* 게시글 리스트의 최대 폭과 일치 */
+  margin-top: 1.25rem;
+  background-color: #f9f9f9; /* 아주 연한 회색 배경색 추가 */
+  padding: 10px 0;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  bottom: 20rem;
+  margin-bottom: 20px;
+}
+
+.page-button {
+  background-color: white;
+  border: 1px solid black;
+  padding: .625rem;
+  margin: 0 .3125rem;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.page-button.active {
+  background-color: #f1f1f1;
+  color: black;
+}
+
+/* Modal styles */
+.modal {
+  display: block; /* 모달을 표시합니다 */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5); /* 배경색을 어둡게 설정 */
+}
+
+.modal-content {
+  background-color: #ffffff; /* 모던한 색상: 흰색 배경 */
+  margin: 5% auto; /* 모달이 중앙에 위치하게 설정 */
+  padding: 20px;
+  border-radius: 8px; /* 모서리를 둥글게 설정 */
+  width: 80%; /* 모달의 너비를 80%로 설정 */
+  max-width: 800px; /* 최대 너비 설정 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 추가 */
+}
+
+.close {
+  color: #888; /* 모던한 색상: 회색 */
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000; /* 호버 및 포커스 시 색상 변경 */
+  text-decoration: none;
+  cursor: pointer;
+}
+
+h2, p {
+  text-align: left; /* 텍스트를 왼쪽으로 정렬 */
+}
+
+.comment-title {
+  text-align: left;
+}
+
+.comments {
+  text-align: left;
+}
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.comment-input {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.comment-button {
+  align-self: flex-start;
+  padding: 10px 20px;
+  background-color: #007BFF; /* 모던한 색상: 파란색 */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.comment-button:hover {
+  background-color: #0056b3; /* 호버 시 색상 변경 */
+}

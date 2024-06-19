@@ -9,6 +9,9 @@ import ProtectedRoute from './user/auth/ProtectedRoute.js';
 import MyPage from './user/MyPage.js';
 import Admin from './user/admin/Admin.js';
 import Delete from './user/Delete.js';
+import Board from './board/Board.js';
+import NewPostForm from './board/NewPostForm.js';
+
 
 function App() {
   return (
@@ -23,6 +26,11 @@ function App() {
           <Route path='/delete' element={<ProtectedRoute><Delete /></ProtectedRoute>}></Route>
           {/* <Route path='/edit' element={<ProtectedRoute><EditPage /></ProtectedRoute>}></Route> */}
           {/* <Route path='/chat' element={<Chat />}></Route> */}
+
+          <Route path="/discussion"element={<Board />}/>
+          <Route path="/newpostform"element={<NewPostForm />}/>
+
+
         </Routes>
       </BrowserRouter>
     </AuthProvider>
