@@ -47,3 +47,16 @@ html, body, #root, .App {
   padding: 20px;
   height: calc(100% - 50px);
 }
+
+.logo-img {
+  width: 18.75rem;
+}
+
+.logo-text {
+  color: #3498db;
+}
+
+.error-message {
+  color: red;
+  margin-top: 0.625rem;
+}

@@ -3,10 +3,10 @@
  */
 import React from 'react'
 
-function Edit() {
+function ChangePassword() {
   return (
     <div>EditPage</div>
   )
 }
 
-export default Edit
+export default ChangePassword;

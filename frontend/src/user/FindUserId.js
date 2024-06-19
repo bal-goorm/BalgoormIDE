@@ -4,10 +4,10 @@
 
 import React from 'react'
 
-function FindId() {
+function FindUserId() {
   return (
     <div>FindId</div>
   )
 }
 
-export default FindId
+export default FindUserId

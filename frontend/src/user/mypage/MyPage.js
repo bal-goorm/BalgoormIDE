@@ -4,29 +4,17 @@
  * 로그아웃 버튼 클릭시 로그아웃
  */
 
-import axios from 'axios';
+
 import React, { useEffect, useState } from 'react'
-import { Col, Container, Form, Nav, Navbar, Row } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import logo1 from '../img/Logo1.png';
+import { Col, Container, Form, Row } from 'react-bootstrap';
+import logo1 from '../../img/Logo1.png';
 import './MyPage.css';
-import { useAuth } from './auth/AuthContext';
-import Delete from './Delete';
+import { useAuth } from '../auth/AuthContext.js';
+import Delete from '../DeleteAccount.js';
 
 function MyPage() {
   const [userInfo, setUserInfo] = useState({id:'', nickname:'', email:'', password:''});
-  const navigate = useNavigate();
-  const {user, logout} = useAuth();
-
-  const handleLogout = async () => {
-    try {
-      await axios.post('http://localhost:8080/logout');
-      localStorage.removeItem('token');
-      navigate('/login')
-    } catch (error) {
-      console.error('로그아웃 실패', error); 
-    }
-  }
+  const {user} = useAuth();
 
   useEffect(() => {
     // 사용자 정보를 가져옴
@@ -60,11 +48,10 @@ function MyPage() {
   <div>
     
     <div className='d-flex'>
-    
       <Container className='flex-grow-1'>
         <div className="text-center mb-4 mt-4">
-          <img src={logo1} alt="BalGoorm Logo" style={{ width: '300px' }} />
-          <h1 className="mt-2" style={{ color: '#3498db' }}>BalGoorm</h1>
+          <img src={logo1} alt="BalGoorm Logo" className='logo-img' />
+          <h1 className="mt-2 logo-text">BalGoorm</h1>
         </div>
 
         <Row className='justify-content-center'>

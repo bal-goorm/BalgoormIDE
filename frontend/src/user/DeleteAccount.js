@@ -5,23 +5,20 @@
 
 import React, { useState } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import logo1 from '../img/Logo1.png';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from './auth/AuthContext';
+import { useAuth } from './auth/AuthContext.js';
 
-
-function Delete({userId}) {
-  const [pwd, setPwd] = useState('');
-  const [message, setMessage] = useState('');
-  const { user, logout} = useAuth();
+function DeleteAccount() {
+  const [password, setPassword] = useState('');
+  const { user} = useAuth();
   const navigate = useNavigate();
 
   const handleDelete = async () => {
-    if(!pwd) {
+    if(!password) {
       try {
-        await axios.delete(`http://localhost:8080/deleteUser/${user.id}`, {data: {pwd}});
+        await axios.delete(`http://localhost:8080/deleteUser/${user.id}`, {data: {password}});
         localStorage.removeItem('token');
         localStorage.removeItem('role');
         alert("계정이 삭제되었습니다. 그동안 저희 서비스를 이용해주셔서 감사합니다.");
@@ -33,11 +30,11 @@ function Delete({userId}) {
   }
 
   return (
-    <div> 
+  <div> 
       <Container className='flex-grow-1'>
         <div className="text-center mb-4 mt-4">
-          <img src={logo1} alt="BalGoorm Logo" style={{ width: '300px' }} />
-          <h1 className="mt-2" style={{ color: '#3498db' }}>BalGoorm</h1>
+          <img src={logo1} alt="BalGoorm Logo" className='logo-img' />
+          <h1 className="mt-2 logo-text">BalGoorm</h1>
         </div>
         
         <div className='border border-2 border-secondary rounded'>
@@ -54,8 +51,8 @@ function Delete({userId}) {
                     <Col sm={5}>
                       <Form.Control 
                       type="password" 
-                      value={pwd}
-                      onChange={(e) => setPwd(e.target.value)}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       placeholder='비밀번호를 입력하세요.' />
                     </Col>
                   </Form.Group>
@@ -72,4 +69,4 @@ function Delete({userId}) {
   )
 }
 
-export default Delete
+export default DeleteAccount;
