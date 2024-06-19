@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Editor from '@monaco-editor/react';
 import { Button, Tabs, Tab } from 'react-bootstrap';
 import Modal from '../components/Modal';
@@ -6,23 +7,25 @@ import axios from 'axios';
 import './EditorPage.css';
 
 function TestEditorPage() {
+  const { id } = useParams(); // 퀴즈 ID에 해당
   const editorRef = useRef(null);
   const [output, setOutput] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-  const [problem, setProblem] = useState({ name: '', content: '', detail: '' });
+  const [quiz, setQuiz] = useState({ quiz_title: '', quiz_content: '', quiz_reg_date: '' });
 
   useEffect(() => {
-    axios.get('http://localhost:8080/api/problems/1')
+    // axios.get(`http://localhost:8080/quiz/detail/${id}?userId=${userId}`)
+    axios.get(`http://localhost:8080/quiz/detail/${id}?userId=1`)
       .then(response => {
         const data = response.data;
         console.log('Fetched problem data:', data);
-        setProblem(data);
+        setQuiz(data);
       })
       .catch(error => {
         console.error('Error fetching problem data:', error);
       });
-  }, []);
+  }, [id]);
 
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
@@ -46,7 +49,7 @@ function TestEditorPage() {
 
   function checkAnswer(userOutput) {
     axios.post('http://localhost:8080/api/problems/check', {
-      problemId: 1,
+      problemId: id,
       userOutput: userOutput
     })
       .then(response => {
@@ -68,29 +71,29 @@ function TestEditorPage() {
   return (
     <div className="editor-page">
       <div className="problem-container">
-        <Tabs defaultActiveKey="problem" id="problem-tabs" >
-          <Tab eventKey="basic" title="기본 개념">
-            <div className="">
-d
+        <Tabs defaultActiveKey="basic" id="problem-tabs">
+          <Tab eventKey="basic" title="기본 개념" className="tab-content">
+            <div className="basic-content">
+              기본 개념 내용
             </div>
           </Tab>
           <Tab eventKey="problem" title="문제" className="tab-content">
-              <div className="problem-name">
-                {problem.name}
+            <div className="problem-name">
+              {quiz.quizTitle}
+            </div>
+            <div className="problem-content">
+              {quiz.quizContent ? quiz.quizContent.split('\\n').map((line, index) => (
+                <div key={index}>{line}</div>
+              )) : 'Loading...'}
+            </div>
+            <div className="problem-detail">
+              <div className="problem-detail-name">
+                주의사항? 입출력예제?
               </div>
-              <div className="problem-content">
-                {problem.content ? problem.content.split('\n').map((line, index) => (
-                  <div key={index}>{line}</div>
-                )) : 'Loading...'}
-              </div>
-              <div className="problem-detail">
-                <div className="problem-detail-name">
-                  주의사항? 입출력예제?
-                </div>
-                {problem.detail ? problem.detail.split('\n').map((line, index) => (
-                  <div key={index}>{line}</div>
-                )) : 'Loading...'}
-              </div>
+              {quiz.quizRegDate ? quiz.quizRegDate.split('\\n').map((line, index) => (
+                <div key={index}>{line}</div>
+              )) : 'Loading...'}
+            </div>
           </Tab>
           <Tab eventKey="qnaboard" title="질의응답">
             <div className="placeholder-content">
