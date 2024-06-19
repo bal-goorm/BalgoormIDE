@@ -81,12 +81,5 @@ public class UserController {
         }
     }
 
-    @GetMapping("/current-user")
-    public ResponseEntity<Map<String, String>> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
-        Map<String, String> response = new HashMap<>();
-        response.put("username", userDetails.getUsername());
-        response.put("userId", ((CustomUserDetails) userDetails).getUserId()); // CustomUserDetails에서 userId를 가져옵니다.
-        return ResponseEntity.ok(response);
-    }
 
 }
