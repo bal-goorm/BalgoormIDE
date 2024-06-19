@@ -1,9 +1,10 @@
 package com.balgoorm.balgoorm_backend.ide.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.balgoorm.balgoorm_backend.ide.model.dto.request.CodeRunRequest;
+import com.balgoorm.balgoorm_backend.ide.model.dto.response.CodeRunResponse;
 
-@Service
-@RequiredArgsConstructor
-public class IdeService {
+import java.io.IOException;
+
+public interface IdeService {
+    CodeRunResponse codeRun(CodeRunRequest executeRequest) throws IOException, InterruptedException;
 }

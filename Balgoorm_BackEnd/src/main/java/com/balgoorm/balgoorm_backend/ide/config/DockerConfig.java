@@ -16,7 +16,7 @@ public class DockerConfig {
         DefaultDockerClientConfig config =
                 DefaultDockerClientConfig.createDefaultConfigBuilder()
                         .withDockerTlsVerify(false)
-                        .withDockerHost("unix://var/run/docker.sock")
+                        .withDockerHost("unix:///var/run/docker.sock")
                         .build();
 
         DockerHttpClient dockerHttpClient = new ApacheDockerHttpClient.Builder()
