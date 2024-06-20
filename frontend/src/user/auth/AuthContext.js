@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState, createContext, useContext } from 'react'
+import Cookies from 'js-cookie';
 
 const AuthContext = createContext(null);
 
@@ -11,32 +12,29 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
     const setAuthToken = (token) => {
-        localStorage.setItem('token', token);
+        Cookies.set('token', token, { expires: 7, secure: true, sameSite: 'Strict'});
     }
 
     const setUserRole = (role) => {
-        localStorage.setItem('role', role);
+        Cookies.set('role', role, { expires: 7, secure: true, sameSite: 'Strict'});
     }
 
     const login = async (userData) => {
-        const { id, password } = userData;
+        const { userId, password } = userData;
         try {
-            const response = await axios.post("http://localhost:8080/login", {
-                id,
-                password
-            });
+            const response = await axios.post("http://localhost:8080/login", userData);
             const { token, role } = response.data;
             setAuthToken(token);
             setUserRole(role);
-            setUser({ id, role });
+            setUser({ userId, role });
         } catch(error) {
             alert(error.response ? error.response.data : "로그인 실패");
         }
     }
 
     const logout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('role');
+        Cookies.removeItem('token');
+        Cookies.removeItem('role');
         setUser(null);
     }
 
