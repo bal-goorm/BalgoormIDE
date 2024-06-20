@@ -15,14 +15,19 @@ function Signup() {
 
   const submitForm = async (data) => {
     console.log(data);
-    const { id, nickname, email, password } = data;
+    const { userId, nickname, email, password } = data;
 
     // api 호출 로직
     try {
       const response = await axios.post('localhost:8080/signup', data);
           }
           catch(error) {
+            if(error.response) {
               alert(error.response.data);
+            } else {
+              alert("회원가입 실패")
+            }
+            
           }
   }
   
@@ -35,14 +40,14 @@ function Signup() {
       </div>
       
       <Form onSubmit={handleSubmit(submitForm)} className="w-100 signup-form" >
-        <Form.Group controlId="id">
+        <Form.Group>
           <Form.Label>아이디</Form.Label>
           <Form.Control type="text" placeholder="id 입력" {...register("id", {required: "아이디를 입력해주세요"})} />
         </Form.Group>
         {errors.id && <div className='error-message'>{errors.id.message}</div>}
         <br />
         
-        <Form.Group controlId="nickname">
+        <Form.Group>
           <Form.Label>닉네임</Form.Label>
           <Form.Control type="text" placeholder="닉네임 입력" 
           {...register("nickname", 
@@ -51,7 +56,7 @@ function Signup() {
         {errors.nickname && <div className="error-message">{errors.nickname.message}</div>}
         <br />
 
-        <Form.Group controlId="email">
+        <Form.Group>
           <Form.Label>이메일</Form.Label>
           <Form.Control type="text" placeholder="이메일 입력" {
             ...register("email", {
@@ -64,7 +69,7 @@ function Signup() {
         {errors.email && <div className="error-message">{errors.email.message}</div>}
         <br />
 
-        <Form.Group controlId="password">
+        <Form.Group>
           <Form.Label>비밀번호</Form.Label>
           <Form.Control type="password" placeholder="비밀번호 입력" {...register("password", {required: "비밀번호를 입력해주세요."})}/>
         </Form.Group>

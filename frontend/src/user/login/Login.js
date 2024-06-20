@@ -22,20 +22,23 @@ function Login() {
 
     const submitForm = async (data) => {
       console.log(data);
-      const { id, password }  = data;
+      const { userId, password }  = data;
 
       try {
         const response = await axios.post('http://localhost:8080/login', data);
         const { token, role } = response.data;
 
-        localStorage.setItem('token', token);
-        localStorage.setItem('role', role);
         setAuthToken(token);
         setUserRole(role);
         role === "ADMIN" ? navigate('/admin') : navigate('/mypage');
       }
       catch(error) {
-        alert(error.response.data);
+        if(error.response) {
+          alert(error.response.data);
+        } else {
+          alert("로그인 실패");
+        }
+        
       }  
     }
     
@@ -48,7 +51,7 @@ function Login() {
         </div>
         
         <Form onSubmit={handleSubmit(submitForm)} className="login-form w-100">
-          <Form.Group controlId="formId">
+          <Form.Group>
             <Form.Label htmlFor='id'>아이디</Form.Label>
             <Form.Control 
             id="id" 
@@ -60,7 +63,7 @@ function Login() {
           {errors.id && <div className='error-message'>{errors.id.message}</div>}
           <br />
           
-          <Form.Group controlId="formPassword">
+          <Form.Group>
             <Form.Label htmlFor='password'>비밀번호</Form.Label>
             <Form.Control 
             id='password' 
