@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/quiz")
+@RequestMapping("/api/quiz")
 @Slf4j
 public class QuizController {
 
@@ -40,6 +40,7 @@ public class QuizController {
 
         return ResponseEntity.ok(quizList);
     }
+
 
     @GetMapping("/detail/{quizId}")
     public ResponseEntity getQuizDetail(@PathVariable Long quizId, @RequestParam(defaultValue = "0") Long userId){
